@@ -60,6 +60,7 @@
   document.addEventListener('mouseup', (e) => {
     if (!isAdmin) return;
     if (currentPop && currentPop.contains(e.target)) return;
+    if (currentBar && currentBar.contains(e.target)) return;
     setTimeout(() => handleSelection(e), 0);
   });
 
