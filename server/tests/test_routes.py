@@ -31,3 +31,48 @@ def test_logout_clears_cookie(client):
     assert r.status_code == 200
     # subsequent admin call should fail
     assert client.get("/admin").status_code == 401
+
+def _login(client):
+    client.post("/admin/login", json={"password": "test"})
+
+def test_get_notes_is_public(client):
+    r = client.get("/api/notes/gatsby")
+    assert r.status_code == 200
+    assert r.json() == []
+
+def test_get_notes_empty(client):
+    _login(client)
+    r = client.get("/api/notes/gatsby")
+    assert r.status_code == 200
+    assert r.json() == []
+
+def test_post_and_get_roundtrip(client):
+    _login(client)
+    note = {
+        "paraId": "para3",
+        "category": "vocab",
+        "selectedText": "advantages",
+        "responseMarkdown": "**advantages** — 优势",
+    }
+    r = client.post("/api/notes/gatsby", json=note)
+    assert r.status_code == 201
+    r2 = client.get("/api/notes/gatsby")
+    assert r2.status_code == 200
+    body = r2.json()
+    assert len(body) == 1
+    assert body[0]["selectedText"] == "advantages"
+    assert body[0]["createdAt"]
+
+def test_post_rejects_bad_category(client):
+    _login(client)
+    bad = {"paraId": "p", "category": "bogus",
+           "selectedText": "x", "responseMarkdown": "y"}
+    r = client.post("/api/notes/gatsby", json=bad)
+    assert r.status_code == 400
+
+def test_post_rejects_bad_slug(client):
+    _login(client)
+    note = {"paraId": "p", "category": "vocab",
+            "selectedText": "x", "responseMarkdown": "y"}
+    r = client.post("/api/notes/..%2Fetc%2Fpasswd", json=note)
+    assert r.status_code in (400, 404)
