@@ -1,0 +1,3300 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Great Gatsby — 中文详注教学版（逐段精析·全九章）</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #fafaf7;
+  --bg2:       #f2efe7;
+  --bg3:       #e8e4d8;
+  --bg4:       #ded9cb;
+  --gold:      #b8942e;
+  --gold-dim:  rgba(184,148,46,0.4);
+  --gold-pale: rgba(184,148,46,0.08);
+  --text:      #2d2a20;
+  --text2:     #6b5e3e;
+  --text3:     #a89870;
+  --white:     #1a1a15;
+  --vocab:     #3a7bb5;
+  --gram:      #3a8b5e;
+  --syntax:    #7a4f9b;
+  --lit:       #c45a3a;
+  --cult:      #3a7a8b;
+  --style:     #7a7a3a;
+  --border:    rgba(184,148,46,0.25);
+  --r:         8px;
+  --ch-heading: #f5f2e8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; color-scheme: light; }
+
+/* Chapter switching */
+.chapter-content { display: none; }
+.chapter-content.active { display: block; }
+.navbar-links a.active-tab { color: var(--gold); background: var(--gold-pale); font-weight: 500; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Lora', 'Noto Serif SC', serif;
+  font-size: 16px;
+  line-height: 1.8;
+  min-height: 100vh;
+}
+
+/* ── COVER ────────────────────────────────────────────────────────────── */
+.cover {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(184,148,46,0.06) 0%, transparent 65%),
+    radial-gradient(ellipse at 80% 80%, rgba(122,79,155,0.08) 0%, transparent 50%),
+    var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 60px,
+      rgba(184,148,46,0.04) 60px, rgba(184,148,46,0.04) 61px);
+  pointer-events: none;
+}
+.cover-inner { position: relative; z-index: 1; max-width: 720px; }
+.cover-seal {
+  width: 64px; height: 64px;
+  border: 1.5px solid var(--gold);
+  transform: rotate(45deg);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 2rem;
+}
+.cover-seal span {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px; color: var(--gold);
+  transform: rotate(-45deg);
+  display: block; line-height: 1;
+}
+.cover h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.3rem;
+  line-height: 1.15;
+}
+.cover-zh {
+  font-family: 'Noto Serif SC', serif;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.1em;
+}
+.cover-author {
+  font-style: italic;
+  color: var(--text2);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+.cover-rule {
+  width: 60%; height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: 0 auto 1.5rem;
+}
+.cover-series {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.88rem;
+  color: var(--text2);
+  letter-spacing: 0.08em;
+  margin-bottom: 2rem;
+}
+.cover-intro {
+  font-size: 0.95rem;
+  color: var(--text2);
+  line-height: 1.8;
+  text-align: justify;
+  margin-bottom: 2rem;
+}
+.cover-toc {
+  list-style: none;
+  text-align: left;
+  background: rgba(184,148,46,0.06);
+  border: 0.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+  columns: 2;
+  column-gap: 2rem;
+}
+@media (max-width: 600px) { .cover-toc { columns: 1; } }
+.cover-toc li {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.85rem;
+  color: var(--text2);
+  padding: 0.3rem 0;
+  border-bottom: 0.5px solid var(--border);
+  break-inside: avoid;
+}
+.cover-toc li:last-child, .cover-toc li:nth-last-child(2) { border-bottom: none; }
+.cover-toc li a { color: var(--text2); text-decoration: none; transition: color 0.15s; }
+.cover-toc li a:hover { color: var(--gold); }
+.cover-ch-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--gold);
+  margin-right: 0.5rem;
+}
+.scroll-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text3);
+  text-transform: uppercase;
+}
+
+/* ── NAV BAR ──────────────────────────────────────────────────────────── */
+.navbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250,250,247,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 0.5px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 2rem; height: 48px;
+  gap: 1rem;
+}
+.navbar-brand {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+.navbar-links {
+  display: flex; gap: 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.navbar-links::-webkit-scrollbar { display: none; }
+.navbar-links a {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.72rem;
+  color: var(--text2);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.navbar-links a:hover { color: var(--gold); background: var(--gold-pale); }
+
+/* ── MAIN LAYOUT ──────────────────────────────────────────────────────── */
+.container { max-width: 860px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+/* ── CHAPTER HEADING ──────────────────────────────────────────────────── */
+.chapter-heading {
+  background: var(--ch-heading);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 1.2rem 1.8rem;
+  margin: 3rem 0 2rem;
+  display: flex; align-items: center; gap: 1.5rem;
+}
+.chapter-heading .ch-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--gold);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.chapter-heading .ch-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1.05rem;
+  color: var(--white);
+}
+.chapter-heading .ch-scope {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text3);
+  letter-spacing: 0.1em;
+}
+
+/* ── PARAGRAPH SECTION ────────────────────────────────────────────────── */
+.para-section { margin-bottom: 3rem; }
+
+.sec-heading {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 0.5px solid var(--border);
+}
+.sec-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sec-label {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  color: var(--text2);
+}
+
+/* Original text block */
+.original {
+  background: linear-gradient(135deg, rgba(184,148,46,0.10), rgba(184,148,46,0.04));
+  border-left: 3px solid var(--gold);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 1.2rem 1.6rem;
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+.original::before {
+  content: 'ORIGINAL TEXT';
+  position: absolute; top: -0.6rem; left: 1.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  background: var(--bg);
+  padding: 0 0.5rem;
+}
+.original p {
+  font-family: 'Lora', serif;
+  font-size: 1.02rem;
+  line-height: 2;
+  color: var(--text);
+  font-style: italic;
+  margin-bottom: 0.8rem;
+}
+.original p:last-child { margin-bottom: 0; }
+
+/* ── ANNOTATION CARDS ─────────────────────────────────────────────────── */
+.cards-grid { display: flex; flex-direction: column; gap: 0.8rem; }
+
+.card {
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 0.5px solid rgba(0,0,0,0.08);
+}
+.card-hdr {
+  padding: 0.5rem 1rem;
+  display: flex; align-items: center; gap: 0.7rem;
+  cursor: pointer;
+  user-select: none;
+}
+.card-hdr:hover { filter: brightness(1.1); }
+.cat-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.85);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.card-term {
+  font-family: 'Lora', 'Noto Serif SC', serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.4;
+}
+.card-toggle {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.card.open .card-toggle { transform: rotate(180deg); }
+.card-hdr.vocab  { background: var(--vocab); }
+.card-hdr.gram   { background: var(--gram);  }
+.card-hdr.structure { background: var(--syntax); }
+.card-hdr.lit    { background: var(--lit);   }
+.card-hdr.cult   { background: var(--cult);  }
+.card-hdr.style  { background: var(--style); }
+.card-body {
+  display: none;
+  background: var(--bg2);
+  border-top: 0.5px solid rgba(0,0,0,0.06);
+  padding: 1rem 1.2rem;
+}
+.card.open .card-body { display: block; }
+.ann-line {
+  font-family: 'Lora', 'Noto Serif SC', serif;
+  font-size: 0.93rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+  padding-left: 0.2rem;
+}
+.ann-line:last-child { margin-bottom: 0; }
+
+/* Flow-grammar map lines */
+.ann-line.flow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--text2);
+  line-height: 1.65;
+  margin-bottom: 0;
+  white-space: pre;
+}
+.ann-line.flow-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0.8rem 0 0.3rem;
+}
+.ann-line.flow-header:first-child { margin-top: 0; }
+
+/* ── DIVIDER ──────────────────────────────────────────────────────────── */
+.section-divider {
+  display: flex; align-items: center; gap: 1rem;
+  margin: 4rem 0 3rem;
+}
+.section-divider::before, .section-divider::after {
+  content: ''; flex: 1; height: 0.5px;
+  background: linear-gradient(to right, transparent, var(--gold-dim), transparent);
+}
+.divider-gem {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+/* ── FOOTER ───────────────────────────────────────────────────────────── */
+.footer {
+  text-align: center;
+  padding: 2rem;
+  border-top: 0.5px solid var(--border);
+  color: var(--text3);
+  font-size: 0.8rem;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.1em;
+}
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+@media (max-width: 600px) {
+  .container { padding: 2rem 1rem 4rem; }
+  .navbar { padding: 0 1rem; }
+  .original { padding: 1rem; }
+  .ann-line.flow { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══════════════════════════════════════════════════════════════ -->
+<section class="cover" id="top">
+  <div class="cover-inner">
+    <div class="cover-seal"><span>文</span></div>
+    <h1>The Great Gatsby</h1>
+    <p class="cover-zh">了不起的盖茨比 — 中文详注教学版（全九章）</p>
+    <p class="cover-author">F. Scott Fitzgerald</p>
+    <div class="cover-rule"></div>
+    <p class="cover-series">BelowIceberg · 精选文学教学版</p>
+    <p class="cover-intro">
+      本教学版逐段精析《了不起的盖茨比》全九章。每节涵盖原文呈现、词汇注解、
+      语法精讲、句子结构分析（主语/动作/宾语/修饰语的依附关系）、文学手法、文化背景与风格分析。
+      每个复杂句附有完整的 flow-grammar map：按阅读顺序从左到右、从上到下展开主语块、
+      动作块与宾语/补语块，清晰展示修饰语的依附层级。
+      助力中国英语学习者从多角度读懂菲茨杰拉德的美国现代文学巅峰之作。
+    </p>
+    <ul class="cover-toc">
+      <li><a href="#ch1"><span class="cover-ch-label">Ch.1</span> 开篇·西卵东卵·晚宴之夜</a></li>
+      <li><a href="#ch2"><span class="cover-ch-label">Ch.2</span> 灰烬谷·汤姆的情妇·醉酒之夜</a></li>
+      <li><a href="#ch3"><span class="cover-ch-label">Ch.3</span> 盖茨比的盛宴·初遇其人</a></li>
+      <li><a href="#ch4"><span class="cover-ch-label">Ch.4</span> 盖茨比的身世·与黛西重逢</a></li>
+      <li><a href="#ch5"><span class="cover-ch-label">Ch.5</span> 盖茨比与黛西的旧梦重燃</a></li>
+      <li><a href="#ch6"><span class="cover-ch-label">Ch.6</span> 詹姆斯·盖兹的真实过往</a></li>
+      <li><a href="#ch7"><span class="cover-ch-label">Ch.7</span> 广场酒店对峙·梅朵之死</a></li>
+      <li><a href="#ch8"><span class="cover-ch-label">Ch.8</span> 盖茨比最后的早晨·威尔逊复仇</a></li>
+      <li><a href="#ch9"><span class="cover-ch-label">Ch.9</span> 葬礼·尾声·逆水行舟的寓言</a></li>
+    </ul>
+    <p class="scroll-hint">↓ scroll to begin</p>
+  </div>
+</section>
+
+<!-- ══ NAVBAR ══════════════════════════════════════════════════════════════ -->
+<nav class="navbar">
+  <span class="navbar-brand">BelowIceberg</span>
+  <ul class="navbar-links">
+    <li><a href="#ch1">Ch.1</a></li>
+    <li><a href="#ch2">Ch.2</a></li>
+    <li><a href="#ch3">Ch.3</a></li>
+    <li><a href="#ch4">Ch.4</a></li>
+    <li><a href="#ch5">Ch.5</a></li>
+    <li><a href="#ch6">Ch.6</a></li>
+    <li><a href="#ch7">Ch.7</a></li>
+    <li><a href="#ch8">Ch.8</a></li>
+    <li><a href="#ch9">Ch.9</a></li>
+  </ul>
+</nav>
+
+<!-- ══ MAIN ════════════════════════════════════════════════════════════════ -->
+<main class="container">
+
+<!-- ══ CHAPTER 1 ═══ -->
+<div class="chapter-heading" id="ch1">
+  <span class="ch-num">CHAPTER 1</span>
+  <span class="ch-title">开篇：父亲的忠告 · 卡拉威家族 · 西卵东卵 · 晚宴之夜</span>
+  <span class="ch-scope">10 sections</span>
+</div>
+
+<div class="chapter-content active" data-chapter="1">
+<!-- ─────────────────── PARAGRAPH 1 ─────────────────── -->
+<section class="para-section" id="para1">
+  <div class="sec-heading">
+    <span class="sec-num">第一节 · Section One</span>
+    <span class="sec-label">开篇第一句：父亲的忠告</span>
+  </div>
+
+  <div class="original">
+    <p>In my younger and more vulnerable years my father gave me some advice that I've been turning over in my mind ever since.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">vulnerable &nbsp;/ˈvʌlnərəbl/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【字面义】脆弱的、容易受伤的，源自拉丁语 vulnerare（伤害）。</p>
+        <p class="ann-line">【此处含义】尼克年轻时内心尚未设防、容易受外界影响的状态。不应译为「软弱」——那是 weak 的意思。vulnerable 更接近「涉世未深、心理未构筑防线」。</p>
+        <p class="ann-line">【搭配】feel vulnerable（感到脆弱）/ leave someone vulnerable（使某人暴露于危险中）/ a vulnerable position（处境危险）。</p>
+        <p class="ann-line">【语域】正式，文学性强，日常口语中也很常见。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">turning over in my mind</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【含义】反复思考、在脑海中不断回味。等同于 mull over、ponder、ruminate on。</p>
+        <p class="ann-line">【细微差别】turn over 暗示一种来回翻转的动作——不是线性的分析，而是把一个想法从不同角度反复审视。</p>
+        <p class="ann-line">【叙事含义】这个短语暗示父亲的建议具有持久的分量。尼克并非听过就忘，而是几十年来一直在咀嚼。这为全书的道德框架奠定基础。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">give someone advice（不可数名词陷阱）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【语法陷阱】advice 是不可数名词，永远不加 -s。说「一条建议」用 a piece of advice，不能说 an advice。</p>
+        <p class="ann-line">【注意】advise 是动词，advice 是名词。中国学生常混淆这两个词。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">现在完成进行时：I've been turning over</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">结构：have/has + been + 现在分词。</p>
+        <p class="ann-line">含义：从过去某时开始，持续至今仍在进行的动作。</p>
+        <p class="ann-line">不能译为「思考过」（过去完成）——而是「一直在反复思考，到现在还在」。</p>
+        <p class="ann-line">这个时态强调了父亲建议的持续影响力，而非一次性的回忆。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 Flow-Grammar Map</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line flow">┌ 时间框架</p>
+        <p class="ann-line flow">│ In my younger and more vulnerable years</p>
+        <p class="ann-line flow">│   younger → 中性描述年龄</p>
+        <p class="ann-line flow">│   more vulnerable → 带有情感分量的心理状态</p>
+        <p class="ann-line flow">│   从外部（年龄）滑向内部（脆弱），语气逐渐下沉</p>
+        <p class="ann-line flow">└ 主语</p>
+        <p class="ann-line flow">  my father</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ ACTION</p>
+        <p class="ann-line flow">  gave</p>
+        <p class="ann-line flow">    → 间接宾语: me</p>
+        <p class="ann-line flow">    → 直接宾语: some advice</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ OBJECT — WHAT KIND OF ADVICE?</p>
+        <p class="ann-line flow">  that I've been turning over in my mind ever since</p>
+        <p class="ann-line flow">    turning over → 翻来覆去地思考（从不同角度反复审视）</p>
+        <p class="ann-line flow">    in my mind → 在脑海中</p>
+        <p class="ann-line flow">    ever since → 从那以后一直（句末悬垂，时间上开放）</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 时间状语前置，制造<strong>叙事距离</strong> — 读者立刻感知这是回望的叙述</p>
+        <p class="ann-line">• 双宾语结构使「建议」如礼物般被传递，强化父子权威与传承</p>
+        <p class="ann-line">• ever since 句末悬垂，暗示影响延伸至今甚至永远</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">框架叙事与叙事前置（Prolepsis）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">菲茨杰拉德从「回忆中的建议」开篇，而非从故事行动本身开始。这种结构在文学中称为「叙事前置」（prolepsis）——在故事正式开始之前，已经暗示了结局的存在。</p>
+        <p class="ann-line">读者立刻知道：故事已经结束，尼克是在事后回望，这为全书奠定了忧郁、反思性的基调。</p>
+        <p class="ann-line">同时，这也是不可靠叙事者的经典信号：一个真正「保留判断」的人，是否需要在第一句话就告诉读者自己多么有道德？</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">父权权威与新教伦理（Protestant Ethic）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">故事背景是1920年代的美国中西部。父亲的建议代表了一种新教伦理：克制、谦逊、不轻易批评他人。</p>
+        <p class="ann-line">这种价值观在「咆哮的二十年代」（Roaring Twenties）的纽约显得格格不入——那是一个放纵、炫富、道德松弛的时代。</p>
+        <p class="ann-line">尼克带着中西部的道德行李进入东部的腐败世界，这一张力贯穿全书。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">渐进式并列：younger and more vulnerable</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">第一个形容词 younger 是中性的年龄描述；第二个 more vulnerable 是带有情感分量的心理状态描述。</p>
+        <p class="ann-line">两者并列，语气在加深——从外部（年龄）到内部（脆弱），制造一种渐进的情感下沉感。</p>
+        <p class="ann-line">「ever since」置于句末，形成悬而未决的开放感，暗示影响延伸至今。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ─────────────────── PARAGRAPH 2 ─────────────────── -->
+<section class="para-section" id="para2">
+  <div class="sec-heading">
+    <span class="sec-num">第二节 · Section Two</span>
+    <span class="sec-label">父亲的原话：被打断的直接引语</span>
+  </div>
+
+  <div class="original">
+    <p>"Whenever you feel like criticizing any one," he told me, "just remember that all the people in this world haven't had the advantages that you've had."</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">feel like criticizing &nbsp;/ˈkrɪtɪsaɪzɪŋ/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【结构】feel like + 动名词：想要做某事，表达随兴、冲动性的愿望。</p>
+        <p class="ann-line">【语气效果】父亲没有用正式的 whenever you wish to pass judgment，而是用了口语化的 feel like，使建议听起来随意、非说教性。</p>
+        <p class="ann-line">【区别】feel like（想做）≠ feel as if（感觉好像）。</p>
+        <p class="ann-line">【拼写】美式英语 criticize，英式英语也可拼作 criticise。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">advantages（阶级特权的委婉说法）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【字面义】优势、有利条件。</p>
+        <p class="ann-line">【深层含义】此处指教育、社会阶层、家庭背景等一整套阶级特权（class privilege）。</p>
+        <p class="ann-line">【文化陷阱】这是1920年代美国有产阶层惯用的委婉说法——用「机遇」（advantages）掩盖「特权」（privilege）的现实。父亲的措辞本身就是阶级意识形态的体现。</p>
+        <p class="ann-line">【叙事功能】这个词预示了盖茨比的悲剧——他是一个没有「advantages」却试图伪造它们的人。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">all + 否定 = 部分否定（Partial Negation）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">「all the people in this world haven't had」= 「并非所有人都拥有」，而非「没有任何人拥有」。</p>
+        <p class="ann-line">all / every / both + 否定动词 = 部分否定，这是中国学生最常犯的语法错误之一。</p>
+        <p class="ann-line">完全否定要用：none of the people / no one in this world has had。</p>
+        <p class="ann-line">例：All students didn't pass.（并非所有学生都通过了）vs No students passed.（所有学生都没通过）。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">被打断的直接引语（Interrupted Direct Speech）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">结构：「引语甲，」插入语，「引语乙。」</p>
+        <p class="ann-line">第一段引语结束后用逗号（而非句号），he told me 是插入语，之后再接第二段引语。</p>
+        <p class="ann-line">这种结构在英语叙事中极为常见，中国学生容易在标点上犯错。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 Flow-Grammar Map</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line flow">┌ 条件 / 时间框架（前置）</p>
+        <p class="ann-line flow">│ Whenever you feel like criticizing any one</p>
+        <p class="ann-line flow">│   Whenever → 无论何时（比 if 更强，默认冲动随时出现）</p>
+        <p class="ann-line flow">│   feel like + V-ing → 口语化表达「想做某事」</p>
+        <p class="ann-line flow">│   you → 指尼克</p>
+        <p class="ann-line flow">└ 引用标记</p>
+        <p class="ann-line flow">  he told me → 父亲说</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ ACTION（祈使句 · 隐含主语 you）</p>
+        <p class="ann-line flow">  just remember</p>
+        <p class="ann-line flow">    just → 语气副词，软化命令口吻</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ OBJECT — 记住什么？</p>
+        <p class="ann-line flow">  that all the people in this world</p>
+        <p class="ann-line flow">    haven't had the advantages</p>
+        <p class="ann-line flow">      that you've had</p>
+        <p class="ann-line flow">    all...haven't → 部分否定 = 「并非所有人都拥有」</p>
+        <p class="ann-line flow">    haven't had → 现在完成时，不平等延伸至当下</p>
+        <p class="ann-line flow">    advantages → 阶级特权的委婉说法</p>
+        <p class="ann-line flow">    that you've had → 限定了「尼克拥有的那类优势」</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• Whenever 前置把全句锁在「条件触发」语境 — 不是假设，是默认</p>
+        <p class="ann-line">• 双重嵌套：宾语从句内嵌关系从句，制造意义的层叠</p>
+        <p class="ann-line">• just 的软化效果：听起来像随口说出，实则是道德框架的核心</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">>新教伦理与美国梦的裂缝</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">父亲的话代表了美国中西部传统的新教价值观：克制批判、尊重他人、感恩自身所有。</p>
+        <p class="ann-line">但这句话在1920年代纽约的语境中成为了讽刺——那是一个人人追逐财富和地位、毫无克制的时代。</p>
+        <p class="ann-line">尼克将这句话带入东部，却无法真正实践它，这构成了他性格的核心张力。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ─────────────────── PARAGRAPH 3 ─────────────────── -->
+<section class="para-section" id="para3">
+  <div class="sec-heading">
+    <span class="sec-num">第三节 · Section Three</span>
+    <span class="sec-label">尼克的性格：「保留判断」与不可靠叙事者</span>
+  </div>
+
+  <div class="original">
+    <p>He didn't say any more but we've always been unusually communicative in a reserved way, and I understood that he meant a great deal more than that. In consequence I'm inclined to reserve all judgments, a habit that has opened up many curious natures to me and also made me the victim of not a few veteran bores. The abnormal mind is quick to detect and attach itself to this quality when it appears in a normal person, and so it came about that in college I was unjustly accused of being a politician, because I was privy to the secret griefs of wild, unknown men. Most of the confidences were unsought—frequently I have feigned sleep, preoccupation, or a hostile levity when I realized by some unmistakable sign that an intimate revelation was quivering on the horizon—for the intimate revelations of young men or at least the terms in which they express them are usually plagiaristic and marred by obvious suppressions. Reserving judgments is a matter of infinite hope. I am still a little afraid of missing something if I forget that, as my father snobbishly suggested, and I snobbishly repeat, a sense of the fundamental decencies is parcelled out unequally at birth.</p>
+  </div>
+
+  <div class="cards-grid">
+
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">communicative in a reserved way（矛盾修辞）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【矛盾并置 Oxymoron】communicative（善于沟通）与 reserved（内敛）是一对矛盾的形容词。</p>
+        <p class="ann-line">【含义】卡拉威家族有一种独特的默契：少说话，但彼此理解。不是冷漠，而是无需言语的深层沟通。</p>
+        <p class="ann-line">【文学术语】这是矛盾修辞（oxymoron）——用矛盾制造深度，是菲茨杰拉德标志性的风格。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">privy to &nbsp;/ˈprɪvɪ tuː/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【含义】知悉（某秘密）。固定搭配，必须与 to 连用。</p>
+        <p class="ann-line">【词源】源自古法语 privé（私密的），与 private 同根。</p>
+        <p class="ann-line">【语域】偏正式，有法律文件色彩（如 Privy Council 枢密院）。</p>
+        <p class="ann-line">【此处语气】带有轻微讽刺——尼克被迫成为别人秘密的保管人，用正式词汇描述非自愿的亲密，制造幽默距离感。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">feigned &nbsp;/feɪnd/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【含义】假装的、伪装的。feign sleep 即装睡。</p>
+        <p class="ann-line">【发音陷阱】g 不发音，读 /feɪnd/ 而非 /feɪgnd/。</p>
+        <p class="ann-line">【词源】源自法语 feindre（假装），与 faint（昏厥）同根。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">hostile levity &nbsp;/ˈhɒstaɪl ˈlevɪti/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【含义】levity 指轻浮、不严肃；hostile levity 即用刻意的、带敌意的轻浮来阻止别人接近。</p>
+        <p class="ann-line">【通俗解释】故意装作漠不关心、插科打诨，以此拒人于千里之外。</p>
+        <p class="ann-line">【语域】极具文学性，日常用语中罕见，本身体现了尼克高度书面化的叙事风格。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">quivering on the horizon &nbsp;/ˈkwɪvərɪŋ/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【含义】quiver 意为颤抖；此处将即将被说出的秘密比作地平线上颤动的幻影。</p>
+        <p class="ann-line">【修辞手法】通感（synesthesia）——将语言事件（即将说出的秘密）转化为视觉意象（地平线上颤动的东西）。</p>
+        <p class="ann-line">【风格意义】菲茨杰拉德散文的缩影：用感官性意象描述抽象心理状态。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">parcelled out &nbsp;/ˈpɑːrsəld/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">【含义】分配、分发（通常指不均等的分配）。parcel out 是短语动词。</p>
+        <p class="ann-line">【此处含义】「基本道德感」（fundamental decencies）如天赋资源，在出生时就已被不均等地分配。</p>
+        <p class="ann-line">【意识形态含义】带有宿命论色彩的精英主义观点，与尼克宣扬的「保留判断」形成深刻矛盾。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">并列定语从句：a habit that has opened up... and made me...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">定语从句 that 引出两个并列谓语：opened up... and made me...，展示同一个习惯的正负两面效果。</p>
+        <p class="ann-line">结构对称、优雅——一个名词，两个并列的结果，互相制衡。这是菲茨杰拉德最基本的句式之一。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">副词 snobbishly 的双重路由效果</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">「as my father snobbishly suggested, and I snobbishly repeat」</p>
+        <p class="ann-line">同一个副词同时修饰父亲和自己，是一个巧妙的自我解构动作。</p>
+        <p class="ann-line">他在批评势利的同时承认自己也是势利眼——这种自我意识的诚实使尼克成为一个复杂而可信的叙事者。</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — Most of the confidences were unsought…</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开（核心句）</p>
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line flow">Most of the confidences</p>
+        <p class="ann-line flow">  Most → 量词，不是 all</p>
+        <p class="ann-line flow">  of the confidences → 介词短语修饰 Most</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ STATE / CONDITION</p>
+        <p class="ann-line flow">  were unsought</p>
+        <p class="ann-line flow">    unsought → 「并非主动寻求的」，被动含义但没有被动语态</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ INSERTION — 破折号插入句（尼克做了什么？）</p>
+        <p class="ann-line flow">  ─ frequently I have feigned sleep,</p>
+        <p class="ann-line flow">  │   preoccupation, or a hostile levity</p>
+        <p class="ann-line flow">  │   ─ when I realized</p>
+        <p class="ann-line flow">  │       ─ by some unmistakable sign</p>
+        <p class="ann-line flow">  │       ─ that an intimate revelation</p>
+        <p class="ann-line flow">  │           was quivering on the horizon</p>
+        <p class="ann-line flow">  │   三项并列宾语（sleep / preoccupation / hostile levity）</p>
+        <p class="ann-line flow">  │   由具体到抽象，最后一项最复杂最书面</p>
+        <p class="ann-line flow">  │   时间从句：感知到信号 → 宾语从句：秘密即将到来</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ REASON — 为什么这样做？（for = because）</p>
+        <p class="ann-line flow">  for the intimate revelations ... are usually</p>
+        <p class="ann-line flow">    plagiaristic and marred by obvious suppressions</p>
+        <p class="ann-line flow">    plagiaristic → 抄袭的（年轻男人的告白不过是在重复别人）</p>
+        <p class="ann-line flow">    marred by obvious suppressions → 被明显省略破坏的（不真诚）</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 破折号插入打断主句流程，制造戏剧性暂停 — 模拟尼克的迂回思维</p>
+        <p class="ann-line">• 三层嵌套：主句 → 时间从句 → 宾语从句</p>
+        <p class="ann-line">• for 引导的原因从句用书面语（而非口语 because），体现尼克的高度文学腔调</p>
+      </div>
+    </div>
+
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">不可靠叙事者的自我建构</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">尼克在此建立了自己「不评判他人」的形象，但整段话充满了评判：</p>
+        <p class="ann-line">称人为「veteran bores」（专业级无聊者）——这是评判。</p>
+        <p class="ann-line">说年轻人的告白「plagiaristic」（抄袭）——这是评判。</p>
+        <p class="ann-line">说「abnormal mind」会依附于他身上——这是评判。</p>
+        <p class="ann-line">菲茨杰拉德通过让尼克不断声称「不判断」但又不断判断，构建了一个经典的不可靠叙事者（unreliable narrator）。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">「Reserving judgments is a matter of infinite hope」</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">全段最具哲学深度的一句话，也是全书的核心主题之一。</p>
+        <p class="ann-line">「infinite hope」——无限的希望——暗示保留判断是一种对人性的乐观主义：如果我不评判你，你也许还有可能变好。</p>
+        <p class="ann-line">这句话预示了尼克对盖茨比的态度：他一直保留着对盖茨比的希望，直到最后。</p>
+        <p class="ann-line">在叙事结构上，这个短句（5个词）紧跟在极长的句子之后，形成强烈的节奏对比，制造停顿和庄重感。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">「politician」的美国文化含义</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">尼克说自己在大学被指责是个「politician」。在美国英语中，politician 有时带有负面含义：善于操纵人际关系、八面玲珑的人。</p>
+        <p class="ann-line">这不是说尼克从政，而是说他被认为是那种故意展示倾听姿态、以此建立人脉的人。</p>
+        <p class="ann-line">这个词揭示了尼克「倾听者」形象的两面性：在别人眼中，他的「保留判断」可能是一种精心设计的社交策略。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">句子长度的对比效果</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line">这一段包含极长的句子（关于「confidences」那个句子）和极短的句子（「Reserving judgments is a matter of infinite hope.」）。</p>
+        <p class="ann-line">长句制造复杂性和混乱感，模拟尼克试图解释自己行为的努力；短句如格言，制造停顿和庄重感。</p>
+        <p class="ann-line">菲茨杰拉德用句子长度来控制读者的呼吸节奏——这是散文写作中非常高级的技巧。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+
+<!-- ==================== 卡拉威家族：显赫的中西部世家... ==================== -->
+<section class="para-section" id="ch1s4">
+  <div class="sec-heading">
+    <span class="sec-num">第四节</span>
+    <span class="sec-label">卡拉威家族：显赫的中西部世家</span>
+  </div>
+  <div class="original">
+    <p>My family have been prominent, well-to-do people in this middle-western city for three generations. The Carraways are something of a clan and we have a tradition that we’re descended from the Dukes of Buccleuch, but the actual founder of my line was my grandfather’s brother who came here in fifty-one, sent a substitute to the Civil War and started the wholesale hardware business that my father carries on today.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">prominent /ˈprɒmɪnənt/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】显著的、显赫的。源自拉丁语 prominēre（突出、向外伸展）。</p>
+<p class="ann-line">【此处用法】修饰 family，表明卡拉威家族在当地社会中具有突出地位。尼克用这个词确立了自己的社会出身——中西部上层社会的一员。</p>
+<p class="ann-line">【语域】正式。口语中更常说 well-known 或 important。</p>
+<p class="ann-line">【搭配】a prominent figure（显赫人物）/ play a prominent role（扮演重要角色）。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">well-to-do（复合形容词）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】富裕的、小康的。英国英语中更常用 well-off，美国英语中 well-to-do 更文雅。</p>
+<p class="ann-line">【结构】副词 well + 介词 to + 动词 do → 复合形容词。类似结构：hard-to-find（难找的）、easy-to-read（易读的）。</p>
+<p class="ann-line">【此处含义】与 prominent 并列，既强调地位也强调财富。尼克在开篇就确立自己的阶级身份——这为他后续「不评判」他人提供了一个充满讽刺意味的基础。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">something of a clan</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】something of a + 名词：某种程度上是一个……。表达一种温和、略带保留的断言。</p>
+<p class="ann-line">【此处含义】卡拉威家族「有点像一个氏族」。something of a 淡化了 clan（氏族）这个词可能带来的自负感，同时又在暗示家族的规模和社会存在感。</p>
+<p class="ann-line">【语用】这种低调陈述（understatement）是尼克叙事风格的标志——总是在自我肯定和自我贬低之间保持微妙的平衡。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">定语从句链条：three generations + who came + that my father carries on</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">全句：「the actual founder of my line was my grandfather's brother who came here in fifty-one, sent a substitute to the Civil War and started the wholesale hardware business that my father carries on today.」</p>
+<p class="ann-line">第一个关系从句 who came... 修饰 grandfather's brother，谓语包含三个并列动词：came, sent, started。</p>
+<p class="ann-line">第二个关系从句 that my father carries on 修饰 business，形成嵌套修饰。</p>
+<p class="ann-line">这是菲茨杰拉德标志性的「连锁修饰」结构——用一个句子完成家族谱系的纵向追溯，信息量极大但语法清晰。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — My family have been prominent...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">┌─ SUBJECT ①</p>
+        <p class="ann-line flow">│  My family</p>
+        <p class="ann-line flow">│  → STATE: have been prominent, well-to-do people</p>
+        <p class="ann-line flow">│     for three generations</p>
+        <p class="ann-line flow">│     prominent → 地位显赫</p>
+        <p class="ann-line flow">│     well-to-do → 经济富裕</p>
+        <p class="ann-line flow">│     in this middle-western city</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ②（补充说明）</p>
+        <p class="ann-line flow">│  The Carraways</p>
+        <p class="ann-line flow">│  → STATE: are something of a clan</p>
+        <p class="ann-line flow">│     something of a → 低调陈述，「某种程度上是一个」</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ③（but 转折 — 说出真相）</p>
+        <p class="ann-line flow">│  the actual founder of my line</p>
+        <p class="ann-line flow">│  → ACTION: was my grandfather's brother</p>
+        <p class="ann-line flow">│     └─ who came here in fifty-one</p>
+        <p class="ann-line flow">│        └─ sent a substitute to the Civil War</p>
+        <p class="ann-line flow">│           └─ started the wholesale hardware business</p>
+        <p class="ann-line flow">│              └─ that my father carries on today</p>
+        <p class="ann-line flow">│     三层嵌套：兄弟 → 创业 → 父亲继承</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">└─ SUBJECT ④（but 再次转折 — 贵族神话）</p>
+        <p class="ann-line flow">   we</p>
+        <p class="ann-line flow">   → ACTION: have a tradition</p>
+        <p class="ann-line flow">      └─ [that] we're descended from the Dukes of Buccleuch</p>
+        <p class="ann-line flow">         tradition ≠ fact（惯例不等于事实）</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 四个并列主句模拟家族谱系的层层追溯：肯定 → 补充 → 真诚 → 神话</p>
+        <p class="ann-line">• 关系从句三重嵌套：兄弟 → 创业 → 父亲继承，完成代际传递链</p>
+        <p class="ann-line">• actual 一词暗示前面的族谱可能不「actual」，制造不可靠叙事者的裂隙</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">家族神话与自我建构</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">尼克在此建立自己的「出身叙事」：显赫、富裕、代代相传。但细读之下，这段话充满了不确定性和反讽。</p>
+<p class="ann-line">「we have a tradition that we're descended from...」——a tradition 暗示这可能只是一个传说（tradition 不等于 fact）。</p>
+<p class="ann-line">「the actual founder of my line was my grandfather's brother」——actual 一词暗示前面的族谱叙事可能不「actual」。</p>
+<p class="ann-line">尼克在讲述自己的背景时，措辞始终在肯定和怀疑之间摇摆。这种自我意识构成了不可靠叙事者的初次露面。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">美国内战中的「替代兵役」制度</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「sent a substitute to the Civil War」（找了替代者参加内战）——1863年美国《征兵法案》允许被征召者支付$300（约合今日$6000+）雇佣他人替代服役。</p>
+<p class="ann-line">这一制度极具争议，被视为「富人的战争、穷人的战斗」（a rich man's war, a poor man's fight）。</p>
+<p class="ann-line">尼克的祖先利用了这一制度——这是阶级特权在战争中的体现。尼克提到此事时没有道德评判，但读者可以感受到其中的讽刺。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">低调陈述的艺术（Understatement）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「something of a clan」——something of 是一个典型的英式低调表达，既是谦逊也是矜持。</p>
+<p class="ann-line">「prominent, well-to-do people」——不直接说「rich and powerful」，而是用两个相对温和的形容词，体现了中西部上层阶级的措辞克制。</p>
+<p class="ann-line">这种低调陈述贯穿尼克的叙事风格：他总是在说自己不怎么样的同时，又在暗示自己其实相当不错。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ==================== 尼克的成长轨迹：耶鲁、大战与东迁的决定... ==================== -->
+<section class="para-section" id="ch1s5">
+  <div class="sec-heading">
+    <span class="sec-num">第五节</span>
+    <span class="sec-label">尼克的成长轨迹：耶鲁、大战与东迁的决定</span>
+  </div>
+  <div class="original">
+    <p>I never saw this great-uncle but I’m supposed to look like him—with special reference to the rather hard-boiled painting that hangs in Father’s office. I graduated from New Haven in 1915, just a quarter of a century after my father, and a little later I participated in that delayed Teutonic migration known as the Great War. I enjoyed the counter-raid so thoroughly that I came back restless. Instead of being the warm center of the world the middle-west now seemed like the ragged edge of the universe—so I decided to go east and learn the bond business. Everybody I knew was in the bond business so I supposed it could support one more single man. All my aunts and uncles talked it over as if they were choosing a prep school for me and finally said, “Why—ye-es” with very grave, hesitant faces. Father agreed to finance me for a year and after various delays I came east, permanently, I thought, in the spring of twenty-two.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">hard-boiled /ˌhɑːrd ˈbɔɪld/（复合形容词）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【字面义】煮老的（鸡蛋）。</p>
+<p class="ann-line">【引申义】冷酷的、不动感情的；也可指画风硬朗、写实。此处描述办公室中挂着的肖像画，意为「画风硬朗、毫无浪漫色彩」。</p>
+<p class="ann-line">【文化内涵】hard-boiled 也是1920年代美国侦探小说（如雷蒙德·钱德勒）的标志性风格——冷静、现实、不为所动。尼克用这个词描述祖先的肖像，暗示了一种某种「硬汉」价值观的传承。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">Teutonic migration /tjuːˈtɒnɪk/（讽刺性委婉语）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【字面义】Teutonic = 日耳曼人的、条顿人的。</p>
+<p class="ann-line">【此处含义】「that delayed Teutonic migration known as the Great War」——尼克用学术化的、带有讽刺意味的措辞指代第一次世界大战，将其描述为一次「延迟了的日耳曼民族迁徙」。</p>
+<p class="ann-line">【效果】将人类历史上最血腥的冲突之一称为一次「迁徙」（migration），制造了巨大的轻描淡写效果（bathos），反映了1920年代一些美国知识分子对战争的幻灭感和讽刺态度。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">the ragged edge of the universe</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】ragged = 破烂的、参差不齐的；the ragged edge = 最边缘、最荒凉的角落。</p>
+<p class="ann-line">【此处含义】尼克将中西部比作「宇宙的边缘」，与前文中的「世界的温暖中心」形成鲜明对比——战争经历彻底改变了他对家乡的感知。</p>
+<p class="ann-line">【隐喻】宇宙（universe）而非世界（world）——暗示尼克视野的极大拓展，也暗示他对家乡的疏离达到了形而上学的程度。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">比较级链条与认知转折</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「Instead of being the warm center of the world the middle-west now seemed like the ragged edge of the universe」</p>
+<p class="ann-line">Instead of + 动名词 (being) 引导被否定的旧认知，主句用 seemed like 引导新认知。</p>
+<p class="ann-line">中心 → 边缘，世界 → 宇宙，温暖 → 破烂——三组反义词构成了一套完整的认知翻转结构。</p>
+<p class="ann-line">「so I decided to go east」——so 标记了因果逻辑：认知翻转 → 行动决定。全句在修辞上是一次完整的「破→立」运动。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — I graduated from New Haven...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">┌─ SUBJECT ①</p>
+        <p class="ann-line flow">│  I</p>
+        <p class="ann-line flow">│  → ACTION: never saw this great-uncle</p>
+        <p class="ann-line flow">│     └─ but I'm supposed to look like him</p>
+        <p class="ann-line flow">│        └─ with special reference to the hard-boiled painting</p>
+        <p class="ann-line flow">│           └─ that hangs in Father's office</p>
+        <p class="ann-line flow">│     supposed to → 据说的、被认定的（非确定）</p>
+        <p class="ann-line flow">│     hard-boiled → 硬朗的、冷酷的（也暗指硬汉价值观传承）</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ②</p>
+        <p class="ann-line flow">│  I</p>
+        <p class="ann-line flow">│  → ACTION: graduated from New Haven in 1915</p>
+        <p class="ann-line flow">│     just a quarter of a century after my father</p>
+        <p class="ann-line flow">│     just → 暗示命运的重复感</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ③</p>
+        <p class="ann-line flow">│  I</p>
+        <p class="ann-line flow">│  → ACTION: participated in ... the Great War</p>
+        <p class="ann-line flow">│     that delayed Teutonic migration → 讽刺性委婉语</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ④（因果链 so...that）</p>
+        <p class="ann-line flow">│  I enjoyed the counter-raid so thoroughly</p>
+        <p class="ann-line flow">│  → RESULT: that I came back restless</p>
+        <p class="ann-line flow">│     restless → 不安的、无法平静的</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ⑤（认知翻转）</p>
+        <p class="ann-line flow">│  the middle-west</p>
+        <p class="ann-line flow">│  → OLD VIEW: warm center of the world</p>
+        <p class="ann-line flow">│  → NEW VIEW: seemed like the ragged edge of the universe</p>
+        <p class="ann-line flow">│     Instead of [being center] → seemed like [edge]</p>
+        <p class="ann-line flow">│     三组反义词：中心→边缘 / 世界→宇宙 / 温暖→破烂</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">└─ SUBJECT ⑥（因果 so — 行动决定）</p>
+        <p class="ann-line flow">   I</p>
+        <p class="ann-line flow">   → ACTION: decided to go east and learn the bond business</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 七个主语块按时间线性排列：童年 → 大学 → 战争 → 幻灭 → 决定</p>
+        <p class="ann-line">• so...that 结果结构：战争经历如此强烈，无法回归正常</p>
+        <p class="ann-line">• permanently, I thought → 叙事后见之明，写作时已知「永久」是幻觉</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">叙事后见之明（Narrative Hindsight）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「I came east, permanently, I thought, in the spring of twenty-two.」</p>
+<p class="ann-line">permanently 和 I thought 之间的逗号插入制造了一个微小的叙事裂隙——尼克在写作时已经知道这个「永久」是错的。</p>
+<p class="ann-line">这短短四个词完美示范了不可靠叙事者的时空双层结构：事件发生时的尼克（1922年春天）以为这是永久的 → 讲述故事时的尼克（两年后）知道这不是。</p>
+<p class="ann-line">菲茨杰拉德经常使用这种「时态断裂」的技巧，让读者同时感知到过去和现在。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">New Haven = 耶鲁大学的代称</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">New Haven（纽黑文）是耶鲁大学所在地，在小说语境中是耶鲁的代称。尼克、汤姆·布坎南都是耶鲁校友。</p>
+<p class="ann-line">1915年毕业意味着尼克属于「迷惘的一代」（Lost Generation）——这一代人刚从大学毕业就被卷入第一次世界大战。</p>
+<p class="ann-line">耶鲁在当时是美国精英阶层的核心教育机构，尼克和汤姆的耶鲁背景确立了他们的阶级身份，也解释了两人之间的社交纽带。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">时间压缩叙事（Temporal Compression）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">一段之内，菲茨杰拉德压缩了尼克从幼年（great-uncle 的肖像）、青年（耶鲁毕业）、战争经历、战后幻灭到决定东迁的完整人生轨迹。</p>
+<p class="ann-line">这种时间压缩通过「并列主句链条」实现——每个主句标记一个人生阶段，句号与句号之间跳跃数年。</p>
+<p class="ann-line">效果：读者在一段内获得了尼克的整体人生轮廓，为后续的叙事建立了完整的心理背景。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ==================== 安顿下来：纸板平房、芬兰女佣与逃跑的狗... ==================== -->
+<section class="para-section" id="ch1s6">
+  <div class="sec-heading">
+    <span class="sec-num">第六节</span>
+    <span class="sec-label">安顿下来：纸板平房、芬兰女佣与逃跑的狗</span>
+  </div>
+  <div class="original">
+    <p>The practical thing was to find rooms in the city but it was a warm season and I had just left a country of wide lawns and friendly trees, so when a young man at the office suggested that we take a house together in a commuting town it sounded like a great idea. He found the house, a weather beaten cardboard bungalow at eighty a month, but at the last minute the firm ordered him to Washington and I went out to the country alone. I had a dog, at least I had him for a few days until he ran away, and an old Dodge and a Finnish woman who made my bed and cooked breakfast and muttered Finnish wisdom to herself over the electric stove.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">weather-beaten cardboard bungalow</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【weather-beaten】被风雨侵蚀的、饱经风霜的。beaten = 被打败的、被打击的，赋予房屋一种「受害者」的形象。</p>
+<p class="ann-line">【cardboard】纸板——夸张修辞（hyperbole），房子不可能是纸板做的，但这个词传达了廉价、脆弱、临时性的感觉。</p>
+<p class="ann-line">【bungalow】平房。与后文盖茨比和布坎南的豪宅形成鲜明对比。</p>
+<p class="ann-line">【八十美元一个月】1922年的$80约合今日$1400，对于当时的纽约近郊来说价格低廉。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">Finnish wisdom（芬兰智慧）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】芬兰女佣「在电炉前喃喃自语芬兰智慧」。muttered 暗示她自言自语，Finnish wisdom 可能指芬兰民间谚语或生活格言。</p>
+<p class="ann-line">【文化细节】1920年代纽约地区有很多芬兰移民，多在富裕家庭做家政服务。尼克提到她时既不褒也不贬，带有一种幽默的疏离感。</p>
+<p class="ann-line">【叙事功能】芬兰女佣和逃跑的狗一起构建了一个「临时性」的生活场景——尼克的生活尚未真正开始。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">插入性修正：I had a dog, at least I had him for a few days</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">逗号后的 at least I had him for a few days 是一个插入性修正（self-correction），修正了前面的陈述「我有一只狗」。</p>
+<p class="ann-line">at least 在此不是「至少」（数量），而是「更准确地说」（修正），表示说话者收回或限定自己刚才说的话。</p>
+<p class="ann-line">这种叙事自修正体现了尼克诚实的叙述风格——他说了「我有狗」，然后立即纠正自己，显示他不愿夸大事实。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — The practical thing was to find rooms...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">┌─ SUBJECT ①</p>
+        <p class="ann-line flow">│  The practical thing</p>
+        <p class="ann-line flow">│  → STATE: was to find rooms in the city</p>
+        <p class="ann-line flow">│     理性的计划</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ②（but 转折）</p>
+        <p class="ann-line flow">│  it</p>
+        <p class="ann-line flow">│  → STATE: was a warm season</p>
+        <p class="ann-line flow">│     感性的现实</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ③（and 并列 — 背景）</p>
+        <p class="ann-line flow">│  I</p>
+        <p class="ann-line flow">│  → ACTION: had just left a country</p>
+        <p class="ann-line flow">│     └─ of wide lawns and friendly trees</p>
+        <p class="ann-line flow">│        视觉意象（大草坪）+ 情感意象（友好的树）</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">└─ SUBJECT ④（when 触发 — 事件转折）</p>
+        <p class="ann-line flow">   a young man at the office</p>
+        <p class="ann-line flow">   → ACTION: suggested</p>
+        <p class="ann-line flow">      → WHAT: that we take a house together</p>
+        <p class="ann-line flow">         → RESULT: it sounded like a great idea</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 从实用判断出发，经过并列链层层展开，最终到达计划 — 理性→感受→行动</p>
+        <p class="ann-line">• when 从句将两个事件在时间轴上对齐：离开草地之国 ↔ 同事提议合租</p>
+        <p class="ann-line">• friendly trees 是菲茨杰拉德标志性的拟人化，赋予风景以人格</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">风景的缺席与不完整的生活</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">这段关于尼克的临时居所的描述充满了「临时感」和「不完整性」：</p>
+<p class="ann-line">cardboard bungalow（纸板平房）→ 虚假的材料</p>
+<p class="ann-line">the dog ran away（狗跑了）→ 不稳定的人际关系</p>
+<p class="ann-line">Finnish woman muttered to herself（芬兰女佣自言自语）→ 无法沟通的陪伴</p>
+<p class="ann-line">菲茨杰拉德以此构建了尼克「尚未扎根」的状态，为后续盖茨比的登场创造对比。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">通勤小镇（Commuting Town）与1920年代郊区化</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「a young man at the office suggested that we take a house together in a commuting town」</p>
+<p class="ann-line">1920年代是美国郊区化的开端——汽车的普及使在城市工作、在郊区居住成为可能。</p>
+<p class="ann-line">西卵（West Egg）和东卵（East Egg）都是「通勤城镇」——住在长岛、在纽约上班的新兴生活方式。</p>
+<p class="ann-line">这一地理设置本身就是阶级叙事的空间化：西卵是新钱（new money），东卵是老钱（old money）。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">菲茨杰拉德的风景描写公式</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「a country of wide lawns and friendly trees」——将抽象的地理概念（country）具象化为两个感官意象（草坪、树）。</p>
+<p class="ann-line">「friendly trees」是菲茨杰拉德标志性的拟人化——赋予非人类物体以人类特质，制造一种温暖但略带感伤的怀旧氛围。</p>
+<p class="ann-line">这一技巧将在全书中反复出现：盖茨比草坪上的「burning gardens」、风从法国窗涌入时「rippling」的酒红色地毯。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ==================== 指路的人：尼克作为「原始移民」的自我想象... ==================== -->
+<section class="para-section" id="ch1s7">
+  <div class="sec-heading">
+    <span class="sec-num">第七节</span>
+    <span class="sec-label">指路的人：尼克作为「原始移民」的自我想象</span>
+  </div>
+  <div class="original">
+    <p>It was lonely for a day or so until one morning some man, more recently arrived than I, stopped me on the road.</p>
+    <p>“How do you get to West Egg Village?” he asked helplessly.</p>
+    <p>I told him. And as I walked on I was lonely no longer. I was a guide, a pathfinder, an original settler. He had casually conferred on me the freedom of the neighborhood.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">pathfinder（探路者）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】pathfinder：开路先锋、探路者。19世纪美国西进运动中常用的词。</p>
+<p class="ann-line">【此处含义】尼克将自己比作一个「pathfinder, an original settler」（探路者、原始定居者），这是一个极其宏大的自我比喻——他只是指了个路。</p>
+<p class="ann-line">【讽刺效果】尼克用史诗般的语言描述极为平凡的事件，制造了一种幽默的不协调感。这是一个自我嘲讽的例子。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">conferred on me the freedom of the neighborhood</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】confer on/upon someone something：授予某人某物（正式用语）。the freedom of a place：某个地方的荣誉市民权。</p>
+<p class="ann-line">【历史背景】「freedom of the city」是中世纪欧洲的一项荣誉——授予某人自由进出城市的权利，是一种极高的尊重。</p>
+<p class="ann-line">【此处反讽】一个路人只是问了个路，尼克却觉得对方「授予」了他整个区域的「自由」。这是尼克将自己微不足道的帮助史诗化的幽默写照。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">And as I walked on I was lonely no longer</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">结构：And + 时间从句 (as I walked on) + 主句 (I was lonely no longer)。</p>
+<p class="ann-line">as = 当……的时候（时间连词），在此标记了一个同时发生的转变：行走的动作与情感的转变同步发生。</p>
+<p class="ann-line">no longer 置于句末，产生延迟揭示的效果——读者先听到 I was lonely，然后才听到否定词 no longer，制造微小的悬念。</p>
+<p class="ann-line">这是一个简洁但极具叙事感染力的句子：三言两语完成了一次情感弧线（孤独 → 不再孤独）。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">反讽的自我史诗化</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">尼克为陌生人指路后，称自己为「a guide, a pathfinder, an original settler」。</p>
+<p class="ann-line">这三个词全都来自美国西进运动的宏大叙事——guide（向导）、pathfinder（探路者）、settler（定居者）——但尼克只是指了条路。</p>
+<p class="ann-line">菲茨杰拉德通过这种不成比例的夸张，既展示了尼克的幽默感，也暗示了他潜意识中将东迁视为某种「征服」或「殖民」——这正是美国梦的叙事结构。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">三项递进式并列的叙事效果</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「a guide, a pathfinder, an original settler」——三项并列名词呈递进式：</p>
+<p class="ann-line">guide（向导）→ 最具体、最临时</p>
+<p class="ann-line">pathfinder（探路者）→ 更具冒险色彩</p>
+<p class="ann-line">original settler（原始定居者）→ 最具历史分量、最宏大</p>
+<p class="ann-line">三项递进制造了一种「语言膨胀」的效果——越说越大，越说越荒谬，但这荒谬感本身就是幽默的来源。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ==================== 夏天的信念：生命重新开始 — 麦达斯与摩... ==================== -->
+<section class="para-section" id="ch1s8">
+  <div class="sec-heading">
+    <span class="sec-num">第八节</span>
+    <span class="sec-label">夏天的信念：生命重新开始 — 麦达斯与摩根的书架</span>
+  </div>
+  <div class="original">
+    <p>And so with the sunshine and the great bursts of leaves growing on the trees—just as things grow in fast movies—I had that familiar conviction that life was beginning over again with the summer.</p>
+    <p>There was so much to read for one thing and so much fine health to be pulled down out of the young breath-giving air. I bought a dozen volumes on banking and credit and investment securities and they stood on my shelf in red and gold like new money from the mint, promising to unfold the shining secrets that only Midas and Morgan and Maecenas knew. And I had the high intention of reading many other books besides. I was rather literary in college—one year I wrote a series of very solemn and obvious editorials for the “Yale News”—and now I was going to bring back all such things into my life and become again that most limited of all specialists, the “well-rounded man.” This isn’t just an epigram—life is much more successfully looked at from a single window, after all.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">great bursts of leaves（视觉意象）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【burst】爆发、突然出现。leaves growing in bursts 形容树叶不是逐渐生长，而是爆炸式地涌现——用动态词汇描述静态的自然现象。</p>
+<p class="ann-line">【just as things grow in fast movies】早期电影的快动作效果——这是1920年代特有的文化参照，菲茨杰拉德将自然生长比作电影特效，标记了「爵士时代」对技术和速度的迷恋。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">Midas and Morgan and Maecenas（三重文化暗指）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">Midas（麦达斯）：希腊神话中的弗里吉亚国王，能点石成金——代表神话般的财富。</p>
+<p class="ann-line">J.P. Morgan（J.P. 摩根）：美国银行家、金融巨头，代表现代资本的力量。</p>
+<p class="ann-line">Maecenas（梅塞纳斯）：古罗马帝国奥古斯都皇帝的艺术赞助人，代表文化与财富的结合。</p>
+<p class="ann-line">三重暗指（allusion）涵盖了神话、金融与艺术——尼克将金融书籍比作能透露这三者秘密的魔法物品，暗示了他对财富兼具敬畏和讽刺的复杂心态。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">that familiar conviction that life was beginning over again（同谓语从句）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">第一个 that 是指示代词（that familiar conviction），第二个 that 引导同位语从句（appositive clause），解释 conviction 的内容。</p>
+<p class="ann-line">conviction that... = ……的信念。不是定语从句（that 在从句中没有语法角色），而是同位语从句（that 仅起连接作用）。</p>
+<p class="ann-line">区别：定语从句 that 在从句中充当主语/宾语；同位语从句 that 在从句中不充当任何成分。</p>
+<p class="ann-line">例：the belief that he is honest（同位语，he is honest 即 the belief）vs the belief that he holds（定语，他持有的信念）。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — And so with the sunshine...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">┌─ 前置状语（条件 / 催化剂）</p>
+        <p class="ann-line flow">│  And so with the sunshine</p>
+        <p class="ann-line flow">│    and the great bursts of leaves growing on the trees</p>
+        <p class="ann-line flow">│    — just as things grow in fast movies —</p>
+        <p class="ann-line flow">│  And so with → 以阳光和树叶为条件</p>
+        <p class="ann-line flow">│  bursts → 爆发式生长（动态词汇描述静态自然）</p>
+        <p class="ann-line flow">│  just as...movies → 电影蒙太奇般的现代文化参照</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">└→ SUBJECT</p>
+        <p class="ann-line flow">   I</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ ACTION</p>
+        <p class="ann-line flow">  had</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ OBJECT</p>
+        <p class="ann-line flow">  that familiar conviction</p>
+        <p class="ann-line flow">    that life was beginning over again with the summer</p>
+        <p class="ann-line flow">    conviction that... = 同位语从句（信念的内容）</p>
+        <p class="ann-line flow">    life was beginning over → 生命重新开始</p>
+        <p class="ann-line flow">    with the summer → 与夏天同步</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 阳光和树叶的爆发是信念的条件或催化剂</p>
+        <p class="ann-line">• 破折号插入语用电影媒介描述自然，标记了爵士时代对技术的迷恋</p>
+        <p class="ann-line">• 同位语从句与 conviction 处于同一指称层级 — 信念即此句本身</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">美国文学的「夏天重启」传统</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「life was beginning over again with the summer」</p>
+<p class="ann-line">美国文学中有一个强大的传统：夏天意味着重新开始、重生、新的希望。从梭罗的《瓦尔登湖》到菲茨杰拉德的盖茨比，夏天是可能性最旺盛的季节。</p>
+<p class="ann-line">尼克的这个信念不仅是个人感受，也呼应了美国梦的核心叙事：随时可以重新开始。</p>
+<p class="ann-line">当然，全书的悲剧恰好在于——在这个夏天结束时，所有的重新开始都变成了终结。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代的债券狂热与「人人都做债券生意」</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「Everybody I knew was in the bond business」——1920年代美国经历了空前的股市繁荣，债券和证券交易是当时最热门的职业。</p>
+<p class="ann-line">尼克的这句话精准捕捉了爵士时代的一个侧面：金融投机的民主化。以前只有华尔街精英玩的游戏，现在「所有人都」在玩。</p>
+<p class="ann-line">这一背景也暗示了即将来临的1929年大萧条——菲茨杰拉德写于1925年，对即将来临的崩溃有着文学家的敏锐预感。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">拟人化与动感的风景（Anthropomorphic Landscape）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「They stood on my shelf in red and gold like new money from the mint」——书籍「站立」在书架上，「像新铸造的硬币」。</p>
+<p class="ann-line">静态的书籍被赋予动感和光泽（red and gold），暗示尼克将知识视为一种可以「持有」的资产——这与盖茨比对书籍的态度（从不阅读但装满书架）形成平行关系。</p>
+<p class="ann-line">「promising to unfold the shining secrets」——继续拟人化链条，书籍如活物般承诺揭示秘密。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ==================== 双蛋寓言：西卵与东卵的地理阶级学... ==================== -->
+<section class="para-section" id="ch1s9">
+  <div class="sec-heading">
+    <span class="sec-num">第九节</span>
+    <span class="sec-label">双蛋寓言：西卵与东卵的地理阶级学</span>
+  </div>
+  <div class="original">
+    <p>It was a matter of chance that I should have rented a house in one of the strangest communities in North America. It was on that slender riotous island which extends itself due east of New York and where there are, among other natural curiosities, two unusual formations of land. Twenty miles from the city a pair of enormous eggs, identical in contour and separated only by a courtesy bay, jut out into the most domesticated body of salt water in the Western Hemisphere, the great wet barnyard of Long Island Sound. They are not perfect ovals—like the egg in the Columbus story they are both crushed flat at the contact end—but their physical resemblance must be a source of perpetual confusion to the gulls that fly overhead. To the wingless a more arresting phenomenon is their dissimilarity in every particular except shape and size.</p>
+    <p>I lived at West Egg, the—well, the less fashionable of the two, though this is a most superficial tag to express the bizarre and not a little sinister contrast between them. My house was at the very tip of the egg, only fifty yards from the Sound, and squeezed between two huge places that rented for twelve or fifteen thousand a season. The one on my right was a colossal affair by any standard—it was a factual imitation of some Hôtel de Ville in Normandy, with a tower on one side, spanking new under a thin beard of raw ivy, and a marble swimming pool and more than forty acres of lawn and garden. It was Gatsby’s mansion. Or rather, as I didn’t know Mr. Gatsby it was a mansion inhabited by a gentleman of that name. My own house was an eye-sore, but it was a small eye-sore, and it had been overlooked, so I had a view of the water, a partial view of my neighbor’s lawn, and the consoling proximity of millionaires—all for eighty dollars a month.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">slender riotous island / courtesy bay</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【slender】细长的、苗条的。拟人化地描述长岛的地理形态。</p>
+<p class="ann-line">【riotous】狂野的、放纵的。预示了长岛作为爵士时代狂欢地的角色。</p>
+<p class="ann-line">【courtesy bay】字面义「礼貌的海湾」——courtesy 指社交礼仪，暗示两个海湾之间仅出于「礼貌」而分隔、实际上距离极近。富人仅仅因为「礼貌」而保持距离。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">the great wet barnyard of Long Island Sound</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】barnyard 指谷仓院子，wet barnyard 即「潮湿的谷仓院子」——将长岛海峡（Long Island Sound）降格描述为家畜的活动空间。</p>
+<p class="ann-line">【效果】在一种宏伟的地理描写之后突然降调（bathos），「最温顺的咸水体」被比作谷仓——这是菲茨杰拉德式的幽默：先将场景抬高至史诗级别，然后轻快地拆解它。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">arresting phenomenon / dissimilarity in every particular</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【arresting】引人注目的、抓住注意力的。源自 arrest（逮捕），暗示一种强制性的视觉吸引。</p>
+<p class="ann-line">【dissimilarity in every particular except shape and size】在所有方面都不相似，除了形状和大小。这是一个精心设计的悖论：两个完全相同的形状，内在却完全不同——这正是新钱（West Egg）和旧钱（East Egg）的关系。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">被动语态的叙事权力：it was overlooked</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「My own house was an eye-sore, but it was a small eye-sore, and it had been overlooked, so I had a view...」</p>
+<p class="ann-line">had been overlooked（被忽视）——被动语态，施动者被省略。谁忽视了它？可能是富人邻居，可能是命运。</p>
+<p class="ann-line">省略施动者的被动语态制造了叙事距离——尼克用这种措辞暗示自己的边缘地位：他的房子不是被「任何人」忽视的，而是被「这个世界」忽视的。</p>
+<p class="ann-line">注意：因为被忽视，尼克获得了「水景和百万富翁邻居的慰藉」——这是一个意外的好结果，但这种「好」完全取决于意外。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — It was on that slender riotous island... [famous eggs paragraph]</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">┌─ SUBJECT ①（地点分裂句）</p>
+        <p class="ann-line flow">│  It was on that slender riotous island</p>
+        <p class="ann-line flow">│    └─ which extends itself due east of New York</p>
+        <p class="ann-line flow">│       └─ where there are two unusual formations of land</p>
+        <p class="ann-line flow">│  It was on ... → 分裂句强调地点</p>
+        <p class="ann-line flow">│  slender → 细长的（拟人化地理）</p>
+        <p class="ann-line flow">│  riotous → 狂野的（预示长岛的狂欢角色）</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ②（并列 — 核心意象）</p>
+        <p class="ann-line flow">│  a pair of enormous eggs</p>
+        <p class="ann-line flow">│    identical in contour</p>
+        <p class="ann-line flow">│    separated only by a courtesy bay</p>
+        <p class="ann-line flow">│  → ACTION: jut out into ... the great wet barnyard</p>
+        <p class="ann-line flow">│    courtesy bay → 礼貌的海湾（富人仅出于社交礼仪而分隔）</p>
+        <p class="ann-line flow">│    wet barnyard → 故意降调（史诗→日常的突然坠落）</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ③（but 转折 — 海鸥视角）</p>
+        <p class="ann-line flow">│  their physical resemblance</p>
+        <p class="ann-line flow">│  → must be a source of confusion to the gulls</p>
+        <p class="ann-line flow">│     like the egg in the Columbus story</p>
+        <p class="ann-line flow">│     crushed flat at the contact end</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">└─ SUBJECT ④（人类视角 — 转折）</p>
+        <p class="ann-line flow">   a more arresting phenomenon</p>
+        <p class="ann-line flow">   → STATE: is their dissimilarity</p>
+        <p class="ann-line flow">      in every particular except shape and size</p>
+        <p class="ann-line flow">      悖论：完全相同的形状，完全不同的内在</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 从高空（海鸥视角）俯视 → 滑入人类视角 → 抵达第一人称叙事</p>
+        <p class="ann-line">• 蛋的隐喻是整个小说的核心空间比喻：新钱 vs 旧钱</p>
+        <p class="ann-line">• crushed flat at the contact end — 暗示接触是暴力的，有损伤</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">「蛋」的象征结构与美国阶级地理学</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">菲茨杰拉德用两个「蛋」比喻东西卵，这是全书最精妙的隐喻之一：</p>
+<p class="ann-line">表面相似（identical in contour）——都代表财富和上流社会。</p>
+<p class="ann-line">内在完全不同（dissimilarity in every particular except shape and size）——新钱（西卵）和老钱（东卵）之间的鸿沟无法逾越。</p>
+<p class="ann-line">「crushed flat at the contact end」暗示了这种接触是暴力的、有损伤的——正如盖茨比与黛西的悲剧。</p>
+<p class="ann-line">哥伦布立蛋的典故（like the egg in the Columbus story）进一步将美国阶级社会与「发现新大陆」的殖民叙事联系起来。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">哥伦布立蛋的故事（Egg of Columbus）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「like the egg in the Columbus story they are both crushed flat at the contact end」</p>
+<p class="ann-line">哥伦布立蛋是一个著名的故事：哥伦布在一次宴会上被质疑发现新大陆并不难，他拿起一个鸡蛋问谁能让它立起来。所有人都失败后，他将鸡蛋的底部轻轻敲碎，就立了起来。</p>
+<p class="ann-line">寓意：创新看似简单，但第一个做到的人需要突破常规思维。</p>
+<p class="ann-line">菲茨杰拉德将这个典故用于东西卵——暗示这两个「蛋」在相互接触的那一端都被压扁了，正如哥伦布的蛋。这是一种讽刺：新世界和旧世界在接触点上是同样破碎的。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">菲茨杰拉德的视角分层技术</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">这一段展示了菲茨杰拉德标志性的视角分层：</p>
+<p class="ann-line">从高空俯视（海鸥的视角：看到的是形状相同的两个蛋）→</p>
+<p class="ann-line">滑入人类视角（无翼者看到的是「外在相同，内在不同」）→</p>
+<p class="ann-line">最终抵达第一人称叙事（「I lived at West Egg」）</p>
+<p class="ann-line">这种从宏观到微观、从抽象到具体的视角切换，使地理描写具有叙事动力——读者被一步步引导进入尼克的个人空间。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<!-- ==================== 布坎南夫妇：汤姆的「反高潮」人生与黛西的... ==================== -->
+<section class="para-section" id="ch1s10">
+  <div class="sec-heading">
+    <span class="sec-num">第十节</span>
+    <span class="sec-label">布坎南夫妇：汤姆的「反高潮」人生与黛西的不可知</span>
+  </div>
+  <div class="original">
+    <p>Across the courtesy bay the white palaces of fashionable East Egg glittered along the water, and the history of the summer really begins on the evening I drove over there to have dinner with the Tom Buchanans. Daisy was my second cousin once removed and I’d known Tom in college. And just after the war I spent two days with them in Chicago.</p>
+    <p>Her husband, among various physical accomplishments, had been one of the most powerful ends that ever played football at New Haven—a national figure in a way, one of those men who reach such an acute limited excellence at twenty-one that everything afterward savors of anti-climax. His family were enormously wealthy—even in college his freedom with money was a matter for reproach—but now he’d left Chicago and come east in a fashion that rather took your breath away: for instance he’d brought down a string of polo ponies from Lake Forest. It was hard to realize that a man in my own generation was wealthy enough to do that.</p>
+    <p>Why they came east I don’t know. They had spent a year in France, for no particular reason, and then drifted here and there unrestfully wherever people played polo and were rich together. This was a permanent move, said Daisy over the telephone, but I didn’t believe it—I had no sight into Daisy’s heart but I felt that Tom would drift on forever seeking a little wistfully for the dramatic turbulence of some irrecoverable football game.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">acute limited excellence（精辟的矛盾修辞）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【acute】尖锐的、敏锐的、剧烈的。</p>
+<p class="ann-line">【limited excellence】有限的卓越——汤姆在21岁时达到了一种「剧烈的有限卓越」，此后一切都在走下坡路。</p>
+<p class="ann-line">【张力】acute 暗示强烈/尖锐，limited 暗示窄小/有限——两者放在一起制造悖论：他的优秀是极为强烈的，同时也是极为有限（狭窄）的。这完美地总结了汤姆·布坎南的性格：体能天才、道德盲者。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">anti-climax（反高潮）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】climax 是高潮、顶点；anti-climax 是反高潮——在期待的高潮之后，实际发生的事情却令人失望。</p>
+<p class="ann-line">【此处用法】汤姆在21岁之后，「everything afterward savors of anti-climax」——他之后的一切都带有反高潮的滋味。savors of（有……的味道）是一个精致的感官动词选择，将抽象的人生体验转化为味觉。</p>
+<p class="ann-line">【叙事功能】这句话定义了汤姆的全部人格：一个永远生活在过去巅峰中的人，此后的一切都是苍白无力的重复。这与盖茨比形成了极其精妙的平行。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">reproach / polo ponies from Lake Forest</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【reproach】责备、指责。Tom 在大学里挥霍金钱是「a matter for reproach」——需要被指责的行为。</p>
+<p class="ann-line">【polo ponies】马球小马。马球是全世界最精英的运动之一，需要大量土地、马匹和维护成本。</p>
+<p class="ann-line">【Lake Forest】芝加哥北郊的超级富豪区。汤姆从 Lake Forest 运来一队马球小马——这一行为本身就是极端财富的展示。</p>
+<p class="ann-line">「in a fashion that rather took your breath away」——以一种相当令人屏息的排场。这里的 your 是泛指第二人称，将读者也拉入了「被汤姆的财富震惊」的位置。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">同位语结构：a national figure in a way, one of those men who...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「a national figure in a way」是 Tom (still the subject from previous clause) 的同位语。</p>
+<p class="ann-line">in a way = 在某种程度上，是一个限定修饰，软化了 national figure 的断言——尼克不愿意说得太绝对。</p>
+<p class="ann-line">who reach such an acute limited excellence at twenty-one that everything afterward savors of anti-climax ——这是一个关系从句内部嵌套 so...that 结果结构的复杂嵌套。</p>
+<p class="ann-line">reach...at twenty-one：at + 年龄 = 在……岁时。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — Her husband, among various physical accomplishments...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line flow">┌ 前置限定（人格首先框定在体能范畴）</p>
+        <p class="ann-line flow">│  Her husband,</p>
+        <p class="ann-line flow">│    among various physical accomplishments,</p>
+        <p class="ann-line flow">│    among → 在众多……之中（限制范围，暗示除此之外别无他物）</p>
+        <p class="ann-line flow">└ 主语</p>
+        <p class="ann-line flow">  Her husband</p>
+        <p class="ann-line flow">    → [he] had been one of the most powerful ends</p>
+        <p class="ann-line flow">      └─ that ever played football at New Haven</p>
+        <p class="ann-line flow">      ends → 美式足球位置，用竞技体育定义社会地位</p>
+        <p class="ann-line flow">      most powerful → 最高级，暗示已达到极限</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ APPOSITIVE ①（同位语 — 身份锁定）</p>
+        <p class="ann-line flow">  a national figure in a way,</p>
+        <p class="ann-line flow">    in a way → 在某种程度上（软化了断言）</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow">→ APPOSITIVE ②（同位语的反同位语 — 更精确的定义）</p>
+        <p class="ann-line flow">  one of those men</p>
+        <p class="ann-line flow">    └─ who reach such an acute limited excellence</p>
+        <p class="ann-line flow">       at twenty-one</p>
+        <p class="ann-line flow">       └─ RESULT: that everything afterward</p>
+        <p class="ann-line flow">          savors of anti-climax</p>
+        <p class="ann-line flow">    acute → 尖锐的、强烈的</p>
+        <p class="ann-line flow">    limited → 有限的、狭窄的</p>
+        <p class="ann-line flow">    二者并列制造悖论：极为强烈，也是极为有限</p>
+        <p class="ann-line flow">    savors of → 带有……的滋味（将抽象体验转化为味觉）</p>
+        <p class="ann-line flow"></p>
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 双同位语嵌套：husband → figure → men，每一步都在缩小定义</p>
+        <p class="ann-line">• acute limited excellence — 四个词概括汤姆的全部悲剧</p>
+        <p class="ann-line">• 这句话在描述汤姆的同时也在无声地描述盖茨比</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">身体的叙事（The Body as Narrative）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">菲茨杰拉德通过汤姆的身体讲述了阶级和权力的故事：</p>
+<p class="ann-line">「one of the most powerful ends」——体育术语（end 是美式足球的位置名称），用竞技体育描述汤姆的社会地位。</p>
+<p class="ann-line">「an acute limited excellence」——身体的卓越已被完全量化、最大化，但同时也已被完全局限。</p>
+<p class="ann-line">「everything afterward savors of anti-climax」——身体的巅峰不可持续，此后的人生只是不断重复「反高潮」。</p>
+<p class="ann-line">这一身体叙事与盖茨比形成了对照：汤姆的身体是过去的遗产，盖茨比的身体（他的微笑、他的存在感）是他自己创造的作品。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">美式足球与美国精英教育</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「most powerful ends that ever played football at New Haven」——New Haven = 耶鲁。汤姆是耶鲁橄榄球队的明星。</p>
+<p class="ann-line">在1920年代的美国，常春藤联盟（Ivy League）的体育明星具有巨大的社会声望——这是精英阶层的「部落英雄」。</p>
+<p class="ann-line">但菲茨杰拉德暗示：这种声望在校园之外毫无意义。体育才能不能转化为任何真实的社会价值——正如汤姆的财富继承不能转化为任何真实的人格深度。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">自由间接引语中的价值判断</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「It was hard to realize that a man in my own generation was wealthy enough to do that.」</p>
+<p class="ann-line">这一句是自由间接引语（free indirect discourse）的经典例子——表达的是尼克的内心想法，但以第三人称叙述出来。</p>
+<p class="ann-line">hard to realize 不仅是认知困难，也是情感困难——尼克在「消化」同辈人拥有的极端财富时有一种不适感。</p>
+<p class="ann-line">in my own generation 是关键限定词——强调汤姆和尼克属于同一代人，这使得财富差距变得更加切身和令人不安。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+
+
+<section class="para-section" id="ch1s11">
+  <div class="sec-heading"><span class="sec-num">第十一节</span><span class="sec-label">布坎南宅：乔治亚殖民风格与汤姆的身体叙事</span></div>
+  <div class="original">
+    <p>And so it happened that on a warm windy evening I drove over to East Egg to see two old friends whom I scarcely knew at all. Their house was even more elaborate than I expected, a cheerful red and white Georgian Colonial mansion overlooking the bay. The lawn started at the beach and ran toward the front door for a quarter of a mile, jumping over sun-dials and brick walks and burning gardens—finally when it reached the house drifting up the side in bright vines as though from the momentum of its run. The front was broken by a line of French windows, glowing now with reflected gold, and wide open to the warm windy afternoon, and Tom Buchanan in riding clothes was standing with his legs apart on the front porch.</p>
+    <p>He had changed since his New Haven years. Now he was a sturdy, straw haired man of thirty with a rather hard mouth and a supercilious manner. Two shining, arrogant eyes had established dominance over his face and gave him the appearance of always leaning aggressively forward. Not even the effeminate swank of his riding clothes could hide the enormous power of that body—he seemed to fill those glistening boots until he strained the top lacing and you could see a great pack of muscle shifting when his shoulder moved under his thin coat. It was a body capable of enormous leverage—a cruel body.</p>
+    <p>His speaking voice, a gruff husky tenor, added to the impression of fractiousness he conveyed. There was a touch of paternal contempt in it, even toward people he liked—and there were men at New Haven who had hated his guts.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">Georgian Colonial mansion / quarter of a mile</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【Georgian Colonial】乔治亚殖民风格，18世纪英美精英阶层最推崇的建筑风格，对称、端庄、权威感——是「老钱」的建筑宣言。</p>
+<p class="ann-line">【the lawn started at the beach and ran toward the front door for a quarter of a mile】草坪从海滩延伸到正门四分之一英里——用距离丈量财富。a quarter of a mile = 约400米。</p>
+<p class="ann-line">【jumping over sun-dials and brick walks and burning gardens】草坪被拟人化为跳跃者——菲茨杰拉德用动词 jumping 赋予静止的景观以动感。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">supercilious /ˌsuːpərˈsɪliəs/</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【含义】傲慢的、目空一切的。字面义源自拉丁语 supercilium（眉毛），原意是「扬起眉毛」——即用面部表情表现轻蔑。</p>
+<p class="ann-line">【此处用法】描述汤姆的「态度」——supercilious manner。这是全书对汤姆最精准的定义词之一。</p>
+<p class="ann-line">【语域】正式、书面语。口语中更常用 arrogant 或 stuck-up。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">a body capable of enormous leverage — a cruel body</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【leverage】杠杆作用、影响力。原本是物理术语，此处转用于人体——汤姆的身体能像杠杆一样施加压力。</p>
+<p class="ann-line">【a cruel body】全书最锐利的人物描写之一。菲茨杰拉德没有说汤姆是残酷的人，而是说他拥有「残酷的身体」——身体被赋予道德品质，暗示暴力本能深植于他的物理存在中。</p>
+<p class="ann-line">【语法】破折号（em dash）后的 a cruel body 是对前面内容的总结性同位语——三个词，切断了一整段的描写，如断头台落下。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">过去分词的叙事密度：glowing now with reflected gold</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「French windows, glowing now with reflected gold, and wide open to the warm windy afternoon」</p>
+<p class="ann-line">glowing 是现在分词作伴随状语——不是独立的谓语，而是附着于 windows 的补充描述。</p>
+<p class="ann-line">reflected gold 中的 reflected 是过去分词作定语——光本身不是金色的，而是「被反射的」金色，暗示财富的光芒是借来的、二次的。</p>
+<p class="ann-line">这一语法细节暗示了布坎南豪宅的光彩并非源于自身——正如汤姆和黛西的阶级地位并非源于个人努力。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — He had changed since his New Haven years.</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT ① — 物理特征</p>
+        <p class="ann-line">He</p>
+        <p class="ann-line flow">  → ACTION: had changed since his New Haven years</p>
+        <p class="ann-line flow">     since → 从耶鲁时代以来（时间标记）</p>
+
+        <p class="ann-line flow">SUBJECT ② — 全新形象（同位语描述）</p>
+        <p class="ann-line">Now he was a sturdy, straw haired man of thirty</p>
+        <p class="ann-line flow">  with a rather hard mouth and a supercilious manner</p>
+        <p class="ann-line flow">    sturdy → 结实的、强壮的（物理力量）</p>
+        <p class="ann-line flow">    straw haired → 稻草色头发（缺乏温暖感的颜色）</p>
+        <p class="ann-line flow">    hard mouth → 紧闭的嘴（暗示冷酷和不愿沟通）</p>
+        <p class="ann-line flow">    supercilious manner → 傲慢的态度（来自拉丁语「扬起眉毛」）</p>
+
+        <p class="ann-line flow">SUBJECT ③ — 眼睛（全句转折点）</p>
+        <p class="ann-line">Two shining, arrogant eyes</p>
+        <p class="ann-line flow">  → ACTION: had established dominance over his face</p>
+        <p class="ann-line flow">  → RESULT: gave him the appearance of always leaning aggressively forward</p>
+        <p class="ann-line flow">    shining → 闪亮的（暗示力量和生命力）</p>
+        <p class="ann-line flow">    arrogant → 傲慢的（道德判断）</p>
+        <p class="ann-line flow">    eyes had established dominance → 眼睛征服了脸（器官与器官之间的战争）</p>
+
+        <p class="ann-line flow">SUBJECT ④ — 身体的力量（核心意象）</p>
+        <p class="ann-line">Not even the effeminate swank of his riding clothes</p>
+        <p class="ann-line flow">  → could hide the enormous power of that body</p>
+        <p class="ann-line flow">    effeminate swank → 女性化的华丽装饰（与身体的阳刚形成反差）</p>
+        <p class="ann-line flow">    a body capable of enormous leverage</p>
+        <p class="ann-line flow">    — a cruel body —</p>
+        <p class="ann-line flow">    破折号如断头台，三个词总结全部描写</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line flow">• 四层递进：外表变化 → 新形象 → 眼睛征服 → 身体的终极审判</p>
+        <p class="ann-line">• a cruel body 是全句（全段）的终点——身体被赋予道德品质</p>
+        <p class="ann-line">• 菲茨杰拉德从未直接说汤姆是残酷的人，而是说他拥有残酷的身体</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">身体的道德叙事（Body as Moral Text）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">菲茨杰拉德通过汤姆的身体来讲述道德故事，而非通过心理描写：</p>
+<p class="ann-line">「a rather hard mouth」——嘴巴很硬 = 不愿意开口 = 缺乏沟通和同理心。</p>
+<p class="ann-line">「two shining, arrogant eyes had established dominance over his face」——眼睛「征服」了他自己的脸——暗示汤姆内部存在某种分裂：眼睛（傲慢/意志）与脸（身体/自我）之间的对抗。</p>
+<p class="ann-line">「a cruel body」——全书最精简的人物定义。不说 cruel person（这是道德判断），而说 cruel body（这是物理事实），暗示暴力是汤姆的本体论属性（ontological），而非行为选择。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">耶鲁大学的社会学意义</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">He had changed since his New Haven years — New Haven = 耶鲁大学。</p>
+<p class="ann-line">1920年代的美国精英主要通过常春藤联盟完成身份认证。耶鲁不仅是一所大学，更是阶级身份的加工厂。</p>
+<p class="ann-line">尼克和汤姆都是耶鲁校友——这构成了两人之间复杂的社交纽带。汤姆在大学时已经是全国知名的橄榄球明星，而尼克只是一个普通学生。</p>
+<p class="ann-line">这种「前叙事」确立了两人关系中的权力等级：汤姆永远是 Alpha，尼克永远是观察者。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">菲茨杰拉德的碎句节奏（Staccato Rhythm）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">注意句子的节奏变化：</p>
+<p class="ann-line">长句 → 长句 → 长句 → a cruel body（三个词）。</p>
+<p class="ann-line">菲茨杰拉德用句子长度控制读者的呼吸——他从长句蓄力，然后用破折号切断，以短句收尾。</p>
+<p class="ann-line">这种从长到短的断裂式收尾（staccato close）是他最标志性的风格技巧之一。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch1s12">
+  <div class="sec-heading"><span class="sec-num">第十二节</span><span class="sec-label">漂浮的女人：风、白沙发与失重的世界</span></div>
+  <div class="original">
+    <p>We walked through a high hallway into a bright rosy-colored space, fragilely bound into the house by French windows at either end. The windows were ajar and gleaming white against the fresh grass outside that seemed to grow a little way into the house. A breeze blew through the room, blew curtains in at one end and out the other like pale flags, twisting them up toward the frosted wedding cake of the ceiling—and then rippled over the wine-colored rug, making a shadow on it as wind does on the sea.</p>
+    <p>The only completely stationary object in the room was an enormous couch on which two young women were buoyed up as though upon an anchored balloon. They were both in white and their dresses were rippling and fluttering as if they had just been blown back in after a short flight around the house. I must have stood for a few moments listening to the whip and snap of the curtains and the groan of a picture on the wall. Then there was a boom as Tom Buchanan shut the rear windows and the caught wind died out about the room and the curtains and the rugs and the two young women ballooned slowly to the floor.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">buoyed up / rippling / fluttering / ballooned</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【buoyed up】buoy = 浮标。被动语态 were buoyed up ——两个女人像被水的浮力托起一样「浮」在沙发上。</p>
+<p class="ann-line">【rippling/fluttering】rippling = 涟漪般波动；fluttering = 飘动、振翅。两个动词叠加制造多重运动轨迹。</p>
+<p class="ann-line">【ballooned】balloon 用作动词 = 如气球般缓缓飘落。与段首的 buoyed（浮起）形成对称——段落完成了一次完整的垂直弧线。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">as though / as if 虚拟比较从句</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「as though upon an anchored balloon」——省略了 they were，直接接介词短语。</p>
+<p class="ann-line">「as if they had just been blown back in after a short flight」——使用过去完成时 had been blown，制造更远的虚拟距离。</p>
+<p class="ann-line">as though / as if 引导非真实比较——女人不是真的在气球上，裙子也不是真的被吹回来。虚拟语态创造了现实与幻象之间的地带。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — The only completely stationary object...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">┌─ SUBJECT ①</p>
+        <p class="ann-line flow">│  The only completely stationary object in the room</p>
+        <p class="ann-line flow">│    only → 强调（唯一的）</p>
+        <p class="ann-line flow">│    completely stationary → 完全静止的（在万物皆动的段落中，这是异常值）</p>
+        <p class="ann-line flow">│  → STATE: was an enormous couch</p>
+        <p class="ann-line flow">│     └─ on which two young women were buoyed up</p>
+        <p class="ann-line flow">│        └─ as though upon an anchored balloon</p>
+        <p class="ann-line flow">│     buoyed up → 被浮力托起（被动语态，抹去施动者）</p>
+        <p class="ann-line flow">│     anchored balloon → 锚定的气球（既上升又被拴住 — 不自由）</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ②</p>
+        <p class="ann-line flow">│  They</p>
+        <p class="ann-line flow">│  → STATE: were both in white</p>
+        <p class="ann-line flow">│  → STATE: their dresses were rippling and fluttering</p>
+        <p class="ann-line flow">│     └─ as if they had just been blown back in</p>
+        <p class="ann-line flow">│        └─ after a short flight around the house</p>
+        <p class="ann-line flow">│     rippling → 涟漪般波动（液体质感的动感）</p>
+        <p class="ann-line flow">│     fluttering → 飘动、振翅（空气质感的动感）</p>
+        <p class="ann-line flow">│     short flight → 短途飞行（赋予女人超自然的轻盈感）</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">├─ SUBJECT ③（尼克作为感知者插入）</p>
+        <p class="ann-line flow">│  I</p>
+        <p class="ann-line flow">│  → must have stood for a few moments</p>
+        <p class="ann-line flow">│     listening to the whip and snap of the curtains</p>
+        <p class="ann-line flow">│     and the groan of a picture on the wall</p>
+        <p class="ann-line flow">│     must have → 推测（不是确定的回忆，是模糊的重建）</p>
+        <p class="ann-line flow">│     whip → snap → groan → 三个拟声词从高频到低频</p>
+        <p class="ann-line flow">│</p>
+        <p class="ann-line flow">└─ SUBJECT ④（转折事件 — 汤姆关门）</p>
+        <p class="ann-line flow">   there was a boom</p>
+        <p class="ann-line flow">     └─ as Tom Buchanan shut the rear windows</p>
+        <p class="ann-line flow">     └─ and the caught wind died out</p>
+        <p class="ann-line flow">        └─ about the room and the curtains and the rugs</p>
+        <p class="ann-line flow">           └─ and the two young women ballooned slowly to the floor</p>
+        <p class="ann-line flow">     caught wind → 被困住的风（被动分词作定语）</p>
+        <p class="ann-line flow">     died out → 风的「死亡」（拟人化）</p>
+        <p class="ann-line flow">     ballooned slowly → 缓缓飘落（段落完成垂直弧线）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line flow">• 段落经历完整的垂直运动：buoyed up → stood → ballooned to the floor</p>
+        <p class="ann-line flow">• 风是整个段落的「第二主角」：吹入 → 吹动 → 发声 → 被关闭 → 死去</p>
+        <p class="ann-line">• 汤姆用一声 boom 打碎了菲茨杰拉德精心构建的梦幻悬浮状态</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">风作为叙事动力（Wind as Narrative Engine）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">风不是背景元素——它是本段的第二主角。</p>
+<p class="ann-line">风吹入 → 吹起裙子 → 吹出声音（whip/snap/groan）→ 被汤姆关窗（boom）→ 风的「死亡」（died out）→ 女人落地。</p>
+<p class="ann-line">风驱动了整个段落的事件链：如果没有风，这段文字就不存在。</p>
+<p class="ann-line">菲茨杰拉德偏爱将风作为「无生命叙事动因」——它推动情节但不具有道德意图，制造了一种命运的冷酷感。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代的白色时尚与有闲阶级</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">Daisy 和 Jordan「都穿白色」——白色是1920年代有闲阶级的时尚宣言。</p>
+<p class="ann-line">只有不需要从事体力劳动的人才能穿白色。白色在这里同时是纯真和空虚的颜色。</p>
+<p class="ann-line">Flapper 文化中的理想女性形象就是轻盈、不受重力约束的——菲茨杰拉德用 buoyed / flight / ballooned 等词汇将女性描绘为介于人类和超自然存在之间的生物。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">拟声词的声学轨迹</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">whip（鞭打声·高频尖锐）→ snap（断裂声·中高频）→ groan（呻吟声·中低频）→ boom（撞击声·低频沉闷）</p>
+<p class="ann-line">四个拟声词形成完整的声学渐弱弧线——从高频到低频，从刺耳到沉闷。</p>
+<p class="ann-line">这不是随机的词选——这是一篇微型交响乐的总谱。菲茨杰拉德对声音的敏感度在英语作家中首屈一指。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch1s13">
+  <div class="sec-heading"><span class="sec-num">第十三节</span><span class="sec-label">黛西的声音：『充满金钱』的前奏</span></div>
+  <div class="original">
+    <p>I looked back at my cousin who began to ask me questions in her low, thrilling voice. It was the kind of voice that the ear follows up and down as if each speech is an arrangement of notes that will never be played again. Her face was sad and lovely with bright things in it, bright eyes and a bright passionate mouth—but there was an excitement in her voice that men who had cared for her found difficult to forget: a singing compulsion, a whispered “Listen,” a promise that she had done gay, exciting things just a while since and that there were gay, exciting things hovering in the next hour.</p>
+    <p>I told her how I had stopped off in Chicago for a day on my way east and how a dozen people had sent their love through me.</p>
+    <p>“Do they miss me?” she cried ecstatically.</p>
+    <p>“The whole town is desolate. All the cars have the left rear wheel painted black as a mourning wreath and there’s a persistent wail all night along the North Shore.”</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">thrilling voice / a singing compulsion</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【thrilling】令人兴奋的、颤栗的。thrill 本义是「刺穿」，引申为「强烈的激动」——黛西的声音如电流穿过听众。</p>
+<p class="ann-line">【a singing compulsion】一种歌唱般的冲动/强迫。compulsion 暗示黛西自己也无法控制——她的声音具有独立于她本人意志的魅力。</p>
+<p class="ann-line">【whispered &#x27;Listen&#x27;】低声的「听着」——这是黛西声音的精华：她似乎在承诺一件只有你能听到的秘密。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">the kind of voice that the ear follows up and down</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「It was the kind of voice that the ear follows up and down as if each speech is an arrangement of notes that will never be played again.」</p>
+<p class="ann-line">三重嵌套：主句（It was the kind of voice）→ 关系从句（that the ear follows）→ 比较从句（as if each speech is...）→ 关系从句（that will never be played again）。</p>
+<p class="ann-line">the ear follows 中的 ear 用器官代替人（转喻 metonymy）——不是尼克在追随，而是他的耳朵在追随，暗示听觉超越了理性控制。</p>
+<p class="ann-line">an arrangement of notes that will never be played again ——这句话是全书中对黛西最精妙的定义：她的魅力不可复制，但也不可持续。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — It was the kind of voice...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line">It (referring to Daisy&#x27;s voice)</p>
+        <p class="ann-line flow">  → STATE: was the kind of voice</p>
+        <p class="ann-line flow">     └─ that the ear follows up and down</p>
+        <p class="ann-line flow">        └─ as if each speech is an arrangement of notes</p>
+        <p class="ann-line flow">           └─ that will never be played again</p>
+
+        <p class="ann-line flow">   the ear follows → 耳朵在追随（不是尼克，是耳朵 — 转喻）</p>
+        <p class="ann-line flow">   follows up and down → 上下追随（如跟随旋律的音高变化）</p>
+        <p class="ann-line flow">   arrangement of notes → 音符的编排（声音被比作音乐）</p>
+        <p class="ann-line flow">   will never be played again → 永远不会被再次演奏（不可复制性）</p>
+
+        <p class="ann-line">后续分句</p>
+        <p class="ann-line">Her face was sad and lovely with bright things in it</p>
+        <p class="ann-line flow">  bright eyes and a bright passionate mouth</p>
+        <p class="ann-line flow">    sad and lovely → 悲伤与美丽并存（矛盾修辞）</p>
+        <p class="ann-line flow">    bright 重复三次（eyes / mouth / things）——暗示光彩的同时也暗示表面性</p>
+
+        <p class="ann-line">there was an excitement in her voice</p>
+        <p class="ann-line flow">  └─ that men who had cared for her found difficult to forget</p>
+        <p class="ann-line flow">     a singing compulsion, a whispered &#x27;Listen,&#x27;</p>
+        <p class="ann-line flow">     a promise that she had done gay, exciting things</p>
+        <p class="ann-line flow">        └─ and that there were gay, exciting things hovering in the next hour</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 尼克对黛西声音的描述用了音乐比喻 — 因为它超越了普通语言的表达能力</p>
+        <p class="ann-line">• will never be played again — 既是赞美也是诅咒，暗示黛西的魅力不属于任何人</p>
+        <p class="ann-line">• 这种用艺术（音乐）描述人的技巧是菲茨杰拉德将人物审美化的典型手法</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">人物审美化（Aestheticization of Character）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">菲茨杰拉德很少直接描述人物的内心，而是将人物转化为审美对象：</p>
+<p class="ann-line">黛西 → 音乐（voice = arrangement of notes）</p>
+<p class="ann-line">她的脸 → 光（sad and lovely with bright things）</p>
+<p class="ann-line">她的声音 → 承诺（a promise that she had done gay, exciting things）</p>
+<p class="ann-line">这种人物描写方式将人物转化为可供观赏的艺术品——这既是菲茨杰拉德的天才，也是他的局限：他笔下的女性常常是美丽的客体，而非完整的主体。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">『hear through』还是『send love』？</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「a dozen people had sent their love through me」</p>
+<p class="ann-line">send one&#x27;s love through someone = 通过某人转达爱意/问候。这是1920年代中西部社交礼仪的常见表达。</p>
+<p class="ann-line">黛西的反应「Do they miss me?」带着一种精心设计的惊讶——她知道人们想念她，但她需要被当面告知。</p>
+<p class="ann-line">这种对话模式揭示了黛西的自我中心和她对他人注意力的依赖。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">词语重复的效果：bright 的三次使用</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">bright things, bright eyes, bright passionate mouth——bright 在一句之内出现三次。</p>
+<p class="ann-line">菲茨杰拉德使用词语重复（repetition）有两个效果：</p>
+<p class="ann-line">① 强调——黛西被光所定义，她的存在本身就是闪闪发光的。</p>
+<p class="ann-line">② 暗示表面性——being bright 不等于 being deep。brightness 可以是纯真，也可以是空洞。</p>
+<p class="ann-line">这种重复技术在全书中被反复使用，尤其是在描写盖茨比的「dream」和「hope」时。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch1s14">
+  <div class="sec-heading"><span class="sec-num">第十四节</span><span class="sec-label">晚宴交锋：汤姆的种族焦虑与电话铃声</span></div>
+  <div class="original">
+    <p>“Don’t look at me,” Daisy retorted. “I’ve been trying to get you to New York all afternoon.”</p>
+    <p>“No, thanks,” said Miss Baker to the four cocktails just in from the pantry, “I’m absolutely in training.”</p>
+    <p>Her host looked at her incredulously.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">The Rise of the Colored Empires / scientific stuff</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【The Rise of the Colored Empires】《有色帝国的崛起》——汤姆在餐桌上引用的种族主义伪科学著作。书名本身暗示了对「白人文明」被「有色人种」取代的恐惧。</p>
+<p class="ann-line">【Goddard】汤姆引用的作者名。实际历史中1920年代流行的是 Lothrop Stoddard 的 The Rising Tide of Color（1920）——菲茨杰拉德故意改变了书名和作者名。</p>
+<p class="ann-line">【scientific stuff】汤姆称之为「科学的东西」——他用这个词为自己的种族主义赋予权威性。科学被降格为证实偏见的工具。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">it&#x27;s been proved / we&#x27;ve got to beat them down</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「It&#x27;s been proved」——现在完成时被动语态。汤姆用被动语态来暗示这是一个已被确认的客观事实，抹去了说话者的主观性。</p>
+<p class="ann-line">「we&#x27;ve got to beat them down」——have got to = 必须（口语化），beat down（打倒、压制）——将种族关系框定为零和战争。</p>
+<p class="ann-line">have got to 比 must 更具口语色彩——汤姆在餐桌上的对话风格与他的大学教育背景形成了讽刺对比。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — &#x27;Civilization&#x27;s going to pieces&#x27;</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line">Tom</p>
+
+        <p class="ann-line flow">→ ACTION（引用标记）</p>
+        <p class="ann-line">broke out violently</p>
+        <p class="ann-line flow">  violently → 猛烈地、粗暴地（不只是说话，是爆发）</p>
+
+        <p class="ann-line flow">→ OBJECT — 直接引语</p>
+        <p class="ann-line">&#x27;Civilization&#x27;s going to pieces,&#x27;</p>
+        <p class="ann-line flow">  going to pieces → 正在分崩离析（现在进行时 = 正在发生）</p>
+
+        <p class="ann-line">&#x27;...have you read The Rise of the Colored Empires</p>
+        <p class="ann-line flow">  by this man Goddard?&#x27;</p>
+        <p class="ann-line flow">  this man → 轻蔑地指称作者（不愿意给予尊重）</p>
+
+        <p class="ann-line">&#x27;...it&#x27;s been proved...</p>
+        <p class="ann-line flow">  it&#x27;s up to us who are the dominant race</p>
+        <p class="ann-line flow">  to watch out or these other races will have control&#x27;</p>
+        <p class="ann-line flow">    it&#x27;s been proved → 被动语态 = 客观事实（掩盖主观偏见）</p>
+        <p class="ann-line flow">    dominant race → 主导种族（不加掩饰的种族等级论）</p>
+        <p class="ann-line flow">    these other races → &#x27;these&#x27; 暗示距离和轻蔑</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 汤姆用被动语态和&#x27;科学&#x27;词汇包装他的种族主义</p>
+        <p class="ann-line">• 菲茨杰拉德让汤姆自己说出这些话——这是最锐利的讽刺武器</p>
+        <p class="ann-line">• going to pieces 是书中反复出现的解体意象（东西在破碎）</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">汤姆作为盖茨比的反面</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">汤姆是盖茨比的镜像反面：</p>
+<p class="ann-line">汤姆继承了一切但内心空洞，盖茨比什么都没有但内心充满梦想。</p>
+<p class="ann-line">汤姆用「科学」来为自己的偏见辩护，盖茨比用「幻想」来创造自己的身份。</p>
+<p class="ann-line">餐桌上的种族主义独白是菲茨杰拉德故意安排的——他要让读者看到汤姆不仅是个施暴者，更是一个意识形态上的反动者。</p>
+<p class="ann-line">这使得盖茨比（尽管他的财富来源可疑）在道德上比汤姆更容易获得读者的同情。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代美国的优生学与科学种族主义</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">The Rising Tide of Color (1920) 是1920年代美国流行的种族主义著作，主张白人文明正面临有色人种的威胁。</p>
+<p class="ann-line">菲茨杰拉德用这个细节精准地定位了汤姆·布坎南的意识形态位置：老钱、白人至上、恐惧被取代。</p>
+<p class="ann-line">值得注意的是，汤姆提到的这种观点在当时的美国精英阶层中相当普遍——这不是汤姆个人的疯狂，而是阶级意识形态的体现。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">violently 的叙事位置</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">Tom broke out violently —— violently 是副词，但被放在 broke out 之后。</p>
+<p class="ann-line">这个位置制造了延迟揭示的效果：读者先听到「汤姆爆发了」，然后才听到「猛烈地」——语气在升级。</p>
+<p class="ann-line">菲茨杰拉德的副词经常被置于动词之后而非之前，用来制造节奏上的冲击感和后知后觉的恐惧。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch1s15">
+  <div class="sec-heading"><span class="sec-num">第十五节</span><span class="sec-label">电话铃声：汤姆的情妇闯入晚宴</span></div>
+  <div class="original">
+    <p>Slenderly, languidly, their hands set lightly on their hips the two young women preceded us out onto a rosy-colored porch open toward the sunset where four candles flickered on the table in the diminished wind.</p>
+    <p>“Why candles?” objected Daisy, frowning. She snapped them out with her fingers. “In two weeks it’ll be the longest day in the year.” She looked at us all radiantly. “Do you always watch for the longest day of the year and then miss it? I always watch for the longest day in the year and then miss it.”</p>
+    <p>“We ought to plan something,” yawned Miss Baker, sitting down at the table as if she were getting into bed.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">indiscreetly / a subdued impassioned murmur</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【indiscreetly】不谨慎地、轻率地。来自 discreet（谨慎的）+ 否定前缀 in-。</p>
+<p class="ann-line">【subdued】压制了的、压低了的。subdue = 征服、抑制。用过去分词作定语——热情被「征服」了，被压制了。</p>
+<p class="ann-line">【impassioned murmur】充满激情的低语——矛盾修辞：murmur 是低沉、不清晰的，impassioned 是充满激情的。汤姆的情妇在电话那头既克制又充满占有欲。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">seemed to be listening + did not rise</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「Mrs. Wilson...seemed to be listening to something...she did not entirely rise.」</p>
+<p class="ann-line">seemed to be listening —— seem 标记了推测性感知：尼克不能确定黛西在听什么，一切是推测。</p>
+<p class="ann-line">did not entirely rise —— 她几乎要站起来，但没有。entirely 是关键副词——她做了一个不完全的动作，暗示内心分裂。</p>
+<p class="ann-line">这种用动作的「未完成性」来暗示内心冲突的技巧，是菲茨杰拉德处理情感张力的标志性手法。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — The telephone rang inside...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT（背景 — 事件触发）</p>
+        <p class="ann-line">The telephone rang inside, startlingly,</p>
+        <p class="ann-line flow">  startlingly → 惊人地、令人惊吓地（副词后置 = 延迟揭示）</p>
+
+        <p class="ann-line flow">→ ACTION（黛西的反应 — 序列）</p>
+        <p class="ann-line">Daisy shook her head decisively at Tom</p>
+        <p class="ann-line flow">  decisively → 坚决地（一个明确、有力的动作）</p>
+        <p class="ann-line flow">  └─ the subject of the stables was dropped</p>
+        <p class="ann-line flow">     └─ indeed all subjects were dropped</p>
+        <p class="ann-line flow">     = 用摇头杀掉了所有话题</p>
+
+        <p class="ann-line flow">→ ACTION（后续 — 紧张气氛）</p>
+        <p class="ann-line">Among the broken fragments of the last five minutes</p>
+        <p class="ann-line flow">  └─ at table I remember...Jordan Baker...</p>
+        <p class="ann-line flow">     └─ leaned forward again in her listening way</p>
+        <p class="ann-line flow">        └─ that she practised in the dining-room</p>
+
+        <p class="ann-line flow">broken fragments → 破碎的碎片（时间被震碎了）</p>
+        <p class="ann-line flow">leaned forward in her listening way → 以她惯常的倾听姿态前倾</p>
+        <p class="ann-line flow">  practised → 练就的（暗示这是一种社交技巧，而非自然的关注）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• startlingly 后置制造延迟揭示 — 读者和晚宴上的客人同时被铃声惊吓</p>
+        <p class="ann-line">• broken fragments — 过去五分钟变成了碎片，时间被暴力事件打破</p>
+        <p class="ann-line">• Jordan 的反应暗示她知道电话是谁打来的 — she practised this</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">电话作为叙事设备</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">电话在《盖茨比》中是一个重要的叙事设备——它从外部世界闯入房间，打破表面的平静。</p>
+<p class="ann-line">第一次电话：汤姆的情妇闯入晚宴——标志着布坎南婚姻的裂缝再也无法掩盖。</p>
+<p class="ann-line">第二次电话（后续章节）：盖茨比的商业伙伴——标志着盖茨比双面生活的暴露。</p>
+<p class="ann-line">电话铃声在这个小说中始终意味着「被压抑的现实突然闯入」，是菲茨杰拉德最偏爱的叙事触发器之一。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代电话的社交意义</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">1920年代是电话从奢侈品变为家庭必需品的过渡期。</p>
+<p class="ann-line">在布坎南这样的富裕家庭，电话已经是标准配置——但这反而使隐私更难保护：任何人都可以直接打进家里。</p>
+<p class="ann-line">电话铃声在晚宴上响起是一种严重的社交失礼——暗示打电话的人没有经过门卫/仆人的过滤，或者具有足够的亲密关系可以直接联系主人。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">fragments 的修辞力量</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「Among the broken fragments of the last five minutes」</p>
+<p class="ann-line">fragments 和 broken 同义叠加——不是简单的碎片，而是「破碎的碎片」，双重强调。</p>
+<p class="ann-line">菲茨杰拉德将抽象的时间概念（五分钟）转化为可被打碎的物理实体——这是他的标志性技术：将抽象体验物质化。</p>
+<p class="ann-line">整句暗示电话铃声不仅打断了对话，更「打碎了」时间本身。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch1s16">
+  <div class="sec-heading"><span class="sec-num">第十六节</span><span class="sec-label">第一次看见盖茨比：黑暗中的孤独身影</span></div>
+  <div class="original">
+    <p>This was untrue. I am not even faintly like a rose. She was only extemporizing but a stirring warmth flowed from her as if her heart was trying to come out to you concealed in one of those breathless, thrilling words. Then suddenly she threw her napkin on the table and excused herself and went into the house.</p>
+    <p>Miss Baker and I exchanged a short glance consciously devoid of meaning. I was about to speak when she sat up alertly and said “Sh!” in a warning voice. A subdued impassioned murmur was audible in the room beyond and Miss Baker leaned forward, unashamed, trying to hear. The murmur trembled on the verge of coherence, sank down, mounted excitedly, and then ceased altogether.</p>
+    <p>“This Mr. Gatsby you spoke of is my neighbor——” I said.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">alone on the doorstep / regarding the silver pepper of the stars</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【alone on the doorstep】独自站在台阶上——alone 不是 lonely。他可能不感到孤独，但他是独自一人。</p>
+<p class="ann-line">【regarding】注视——比 looking at 更正式、更持久、更深思。暗示盖茨比的注视不是随意的扫视，而是一种专注的、带有目的的凝视。</p>
+<p class="ann-line">【the silver pepper of the stars】星星像银色的胡椒粉——极其独特的天文比喻。pepper 暗示了随机散布、微小但有刺激性——星空被降格为餐桌上的调味料。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">I was alone again...when I became aware of</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「I was alone again in the unquiet darkness when I became aware of a figure standing...」</p>
+<p class="ann-line">when 在此不是严格的时间连词（「当……的时候」），而是叙事性的「就在那时」——标记了一个认知事件的突然发生。</p>
+<p class="ann-line">became aware of —— 不是 saw（主动的看），而是 became aware of（被动地意识到）——暗示尼克不是在寻找盖茨比，而是盖茨比的存在逐渐渗入了他的感知。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — something in his leisurely movements...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT（叙述者感知）</p>
+        <p class="ann-line">I</p>
+        <p class="ann-line flow">  → became aware of the figure</p>
+
+        <p class="ann-line flow">SUBJECT（被感知者 — 盖茨比）</p>
+        <p class="ann-line">something in his leisurely movements</p>
+        <p class="ann-line flow">  and the secure position of his feet upon the lawn</p>
+        <p class="ann-line flow">    leisurely → 从容的、不慌不忙的</p>
+        <p class="ann-line flow">    secure position of his feet → 双脚稳健地站在草坪上</p>
+        <p class="ann-line flow">    他的从容和稳健暗示：这是他的地盘</p>
+
+        <p class="ann-line flow">→ SUGGESTED</p>
+        <p class="ann-line">that it was Mr. Gatsby himself,</p>
+        <p class="ann-line flow">  come out to determine what share was his</p>
+        <p class="ann-line flow">    └─ of our local heavens</p>
+        <p class="ann-line flow">    come out → 走出来（到这里来）</p>
+        <p class="ann-line flow">    determine → 确定（带有目的性的审视）</p>
+        <p class="ann-line flow">    what share was his → 哪一份……是他的</p>
+        <p class="ann-line flow">      of our local heavens → 当地天堂的份额</p>
+
+        <p class="ann-line flow">→ ACTION（盖茨比做了什么）</p>
+        <p class="ann-line">he stretched out his arms</p>
+        <p class="ann-line flow">  toward the dark water</p>
+        <p class="ann-line flow">    in a curious way</p>
+        <p class="ann-line flow">      stretched out → 伸出（充满渴望的姿势）</p>
+        <p class="ann-line flow">      dark water → 黑暗的水（分隔西卵与东卵的海湾）</p>
+
+        <p class="ann-line flow">→ OBJECT（尼克看到了什么）</p>
+        <p class="ann-line">I...</p>
+        <p class="ann-line flow">  → could have sworn</p>
+        <p class="ann-line flow">    → [that] he was trembling</p>
+        <p class="ann-line flow">    could have sworn → 我敢发誓（虚拟语气 — 尼克的推测）</p>
+        <p class="ann-line flow">    trembling → 颤抖（整部小说最令人心碎的身体动作）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 从冷静的观察（leisurely movements）到震撼的发现（he was trembling）</p>
+        <p class="ann-line">• could have sworn — 尼克不敢确定，用虚拟语气保持叙事距离</p>
+        <p class="ann-line">• stretched out his arms — 全书最具标志性的姿势</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">盖茨比伸手的姿势：全书最具标志性的意象</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「he stretched out his arms toward the dark water in a curious way」</p>
+<p class="ann-line">这是全书最具标志性的姿势——也是美国文学中最著名的意象之一。</p>
+<p class="ann-line">stretched out（伸出）——暗示渴望和无法触及的距离。</p>
+<p class="ann-line">toward the dark water ——朝向分隔西卵（他的位置）和东卵（黛西的位置）的海湾。</p>
+<p class="ann-line">a curious way ——尼克无法用任何精确的词汇描述这个姿势，只能用 curious（奇怪的、引人好奇的）。这种「不可描述性」恰恰是小说最强大的文学时刻。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">美国梦的姿势学（The Gesture of the American Dream）</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">盖茨比伸手的姿势是美国文学中对「渴望」最精确的视觉化：</p>
+<p class="ann-line">他站在自己的领地上（双腿稳健），凝视着黑暗的水面，伸出手臂——</p>
+<p class="ann-line">这个姿势同时是胜利的（他拥有了这座豪宅）和失败的（他永远触碰不到对岸）。</p>
+<p class="ann-line">菲茨杰拉德将整个美国梦的悖论压缩进了一个身体姿势中。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">从观察滑向推测</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">全段的叙述视角经历了微妙的变化：</p>
+<p class="ann-line">冷静的第三视角观察（leisurely movements, secure position）→</p>
+<p class="ann-line">推测（suggested that it was Mr. Gatsby）→</p>
+<p class="ann-line">不可置信的推测（I could have sworn he was trembling）。</p>
+<p class="ann-line">尼克的叙事从客观滑向主观、从确定滑向推测——这正是不可靠叙事者的标准轨迹。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch1s17">
+  <div class="sec-heading"><span class="sec-num">第十七节</span><span class="sec-label">绿光：美国文学中最著名的一盏灯</span></div>
+  <div class="original">
+    <p>Almost before I had grasped her meaning there was the flutter of a dress and the crunch of leather boots and Tom and Daisy were back at the table.</p>
+    <p>“It couldn’t be helped!” cried Daisy with tense gaiety.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">vanished / minute and far away / had vanished forever</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【vanished】消失了。比 disappeared 更强——vanished 暗示「突然、彻底、令人不安的消失」。</p>
+<p class="ann-line">【minute /maɪˈnjuːt/】极其微小的——注意发音！不是 minute /ˈmɪnɪt/（分钟），而是 /maɪˈnjuːt/（极小的）。</p>
+<p class="ann-line">【had vanished forever】过去完成时 —— 在尼克转身的瞬间，它已经永远消失了。forever 是整本书最残酷的词之一。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">when I looked once more / it had vanished</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「When I looked once more for Gatsby he had vanished, and I was alone again in the unquiet darkness.」</p>
+<p class="ann-line">when + 过去时（I looked）→ 主句用过去完成时（he had vanished）——时间差叙事：当尼克去看时，盖茨比已经消失了。</p>
+<p class="ann-line">这种时态搭配制造了「错过」的感觉——盖茨比的消失发生在尼克的注视之前，暗示他有意在尼克转身的瞬间离去。</p>
+<p class="ann-line">I was alone again —— again 是关键：尼克又回到了孤独，正如晚餐前一样。整章形成了一个循环。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — the green light...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT（我看到什么）</p>
+        <p class="ann-line">I</p>
+        <p class="ann-line flow">  → glanced seaward</p>
+        <p class="ann-line flow">  → distinguished nothing</p>
+        <p class="ann-line flow">     └─ except a single green light,</p>
+        <p class="ann-line flow">        minute and far away,</p>
+        <p class="ann-line flow">           └─ that might have been the end of a dock</p>
+
+        <p class="ann-line flow">    glanced → 瞥了一眼（不是看，是瞥）</p>
+        <p class="ann-line flow">    distinguished → 辨别出（艰难地在黑暗中辨识）</p>
+        <p class="ann-line flow">    nothing except a single green light — 一切黑暗，只有一盏灯</p>
+        <p class="ann-line flow">    minute and far away → 极其微小且遥远（双重距离）</p>
+        <p class="ann-line flow">    might have been → 可能是码头尽头（不确定的推测）</p>
+
+        <p class="ann-line flow">→ ACTION（叙事转折）</p>
+        <p class="ann-line">When I looked once more for Gatsby</p>
+        <p class="ann-line flow">  he had vanished,</p>
+        <p class="ann-line flow">  and I was alone again in the unquiet darkness</p>
+        <p class="ann-line flow">    once more → 再一次（暗示多次转头）</p>
+        <p class="ann-line flow">    had vanished → 过去完成时 — 他已经消失了</p>
+        <p class="ann-line flow">    alone again → 又回到了孤独</p>
+        <p class="ann-line flow">    unquiet darkness → 不平静的黑暗（paradox: 黑暗本应是安静的）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 整段从「绿光」到「消失」再到「孤独」——完成了完整的情感弧线</p>
+        <p class="ann-line">• may have been the end of a dock — 不确定性是绿光的本质</p>
+        <p class="ann-line">• unquiet darkness — 黑暗本身不安宁，暗示尼克内心的躁动</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">绿光：象征意义的层次</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">绿光在小说中有多重象征意义：</p>
+<p class="ann-line">① 最表层：黛西的家在 East Egg，绿光是布坎南家码头尽头的灯。盖茨比伸手朝向的，就是黛西。</p>
+<p class="ann-line">② 中间层：绿光是「美国梦」的象征——永远在前方，永远可望而不可即。绿灯的颜色也是美元的颜色。</p>
+<p class="ann-line">③ 最深层：绿光是「希望」本身的象征——monte and far away，但确实存在。</p>
+<p class="ann-line">菲茨杰拉德在整本书中反复引用这盏灯，最终让它成为英语文学中最著名的象征之一。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">绿灯在美国文化中的位置</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">绿灯已经成为美国文化中的象征符号，不断被后来的文学、电影和流行文化引用：</p>
+<p class="ann-line">绿光代表了对更好生活的渴望、对未来的信念、以及这种信念永远无法完全实现的残酷事实。</p>
+<p class="ann-line">在某种意义上，绿灯就是「美国梦」在物理世界中的化身——一个具体的、闪亮的、但永远遥远的点。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">might have been 的不确定性</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">尼克用了 might have been（可能是），而不是 was（是）——他不能确定绿光是不是在码头尽头。</p>
+<p class="ann-line">这种不确定性不是技术问题——是哲学问题。绿光的本质就是不确定的：</p>
+<p class="ann-line">它到底是什么？黛西？未来？希望？还是一切我们追逐但我们永远无法到达的东西？</p>
+<p class="ann-line">菲茨杰拉德故意让绿光保持模糊状态，使其成为一个开放性的象征。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+
+</div>
+</div>
+
+<div class="chapter-content" data-chapter="2">
+<div class="chapter-heading" id="ch2">
+  <span class="ch-num">CHAPTER 2</span>
+  <span class="ch-title">灰烬谷 · T·J·埃克尔堡博士的眼睛 · 汤姆的情妇 · 醉酒之夜</span>
+  <span class="ch-scope">9 sections</span>
+</div>
+
+<section class="para-section" id="ch2s1">
+  <div class="sec-heading"><span class="sec-num">第一节</span><span class="sec-label">灰烬谷：美国的另一面</span></div>
+  <div class="original">
+    <p>About half way between West Egg and New York the motor-road hastily joins the railroad and runs beside it for a quarter of a mile, so as to shrink away from a certain desolate area of land. This is a valley of ashes—a fantastic farm where ashes grow like wheat into ridges and hills and grotesque gardens; where ashes take the forms of houses and chimneys and rising smoke and finally, with a transcendent effort, of men who move dimly and already crumbling through the powdery air. Occasionally a line of grey cars crawls along an invisible track, gives out a ghastly creak and comes to rest, and immediately the ash-grey men swarm up with leaden spades and stir up an impenetrable cloud which screens their obscure operations from your sight.</p>
+    <p>But above the grey land and the spasms of bleak dust which drift endlessly over it, you perceive, after a moment, the eyes of Doctor T. J. Eckleburg. The eyes of Doctor T. J. Eckleburg are blue and gigantic—their retinas are one yard high. They look out of no face but, instead, from a pair of enormous yellow spectacles which pass over a nonexistent nose. Evidently some wild wag of an oculist set them there to fatten his practice in the borough of Queens, and then sank down himself into eternal blindness or forgot them and moved away. But his eyes, dimmed a little by many paintless days under sun and rain, brood on over the solemn dumping ground.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">a fantastic farm where ashes grow like wheat</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【fantastic】在此不是「棒极了」（现代口语）——而是「奇幻的、超现实的」。一个生长灰烬的农场本身就是超现实的。</p>
+<p class="ann-line">【ashes grow like wheat】灰烬像麦子一样生长——将工业污染比作农业丰收。这是全书最锐利的生态讽刺之一。</p>
+<p class="ann-line">【grotesque gardens】畸形怪异的花园——grotesque 源自意大利语 grottesco（洞穴壁画风格），暗示扭曲变形的美。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">Dr. T.J. Eckleburg / persistent stare</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【Dr. T.J. Eckleburg】T.J. 埃克尔堡博士——一个不存在的眼科医生。那块广告牌上的巨眼是全书最著名的象征之一。</p>
+<p class="ann-line">【persistent stare】持久的凝视——persistent 暗示这种凝视是持续不断、无法逃避的。</p>
+<p class="ann-line">【sink into the solemn dumping ground】沉入庄严的垃圾场——solemn（庄严的）用于描述垃圾场是极具讽刺意味的措辞。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">where ashes take the forms of houses and chimneys</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「a fantastic farm where ashes grow like wheat into ridges and hills and grotesque gardens, where ashes take the forms of houses and chimneys and rising smoke」</p>
+<p class="ann-line">两个并列的 where 从句——不是自然界在生长，而是灰烬在仿造自然的形态。</p>
+<p class="ann-line">where ashes grow —— 灰烬本身成为了主语和动作者。不是「灰烬被堆积」，而是「灰烬在生长」——被动变为主动，制造了末日般的可怕生命力。</p>
+<p class="ann-line">take the forms of → 变形成（暗示灰烬具有某种邪恶的拟态能力）</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — the eyes of Doctor T.J. Eckleburg...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT（广告牌的眼睛）</p>
+        <p class="ann-line">the eyes of Doctor T.J. Eckleburg</p>
+        <p class="ann-line flow">  are blue and gigantic</p>
+        <p class="ann-line flow">    └─ their retinas are one yard high</p>
+        <p class="ann-line flow">  blue and gigantic → 蓝色且巨大（超自然的比例）</p>
+
+        <p class="ann-line">LOCATION（眼睛从何处看）</p>
+        <p class="ann-line">They look out</p>
+        <p class="ann-line flow">  from no face</p>
+        <p class="ann-line flow">    └─ but, instead, from a pair of enormous yellow spectacles</p>
+        <p class="ann-line flow">       └─ which pass over a nonexistent nose</p>
+        <p class="ann-line flow">  look out from no face → 从「无脸之处」向外看（超现实的、可怕的意象）</p>
+        <p class="ann-line flow">  pass over a nonexistent nose → 跨过一个不存在的鼻子（支架比脸更长存）</p>
+
+        <p class="ann-line flow">→ BACKSTORY（它们如何来到此处）</p>
+        <p class="ann-line">some wild wag of an oculist</p>
+        <p class="ann-line flow">  set them there</p>
+        <p class="ann-line flow">    └─ to fatten his practice...</p>
+        <p class="ann-line flow">       └─ and then sank down himself</p>
+        <p class="ann-line flow">          └─ into eternal blindness or forgot them...</p>
+
+        <p class="ann-line flow">→ ACTION（它们现在做什么）</p>
+        <p class="ann-line">his eyes, dimmed by many paintless days</p>
+        <p class="ann-line flow">  under sun and rain,</p>
+        <p class="ann-line flow">  brood on over the solemn dumping ground</p>
+        <p class="ann-line flow">    dimmed → 模糊的（褪色、暗淡）</p>
+        <p class="ann-line flow">    brood on → 阴郁地凝视（比 stare 更具情感深度）</p>
+        <p class="ann-line flow">    solemn → 庄严的（用于垃圾场 = 讽刺的崇高感）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• look out from no face — 全书最令人不安的意象之一</p>
+        <p class="ann-line">• 眼睛从广告牌上「凝视」垃圾场，暗示某种沉默的道德审判</p>
+        <p class="ann-line">• brood on 赋予这双人造眼睛以灵魂——它们仿佛在思考、在判断</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">埃克尔堡之眼：上帝的替代品？</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">在缺乏宗教信仰的现代美国，埃克尔堡博士的眼睛成为了上帝目光的替代品：</p>
+<p class="ann-line">它们注视一切（brood on over the solemn dumping ground）。</p>
+<p class="ann-line">它们来自「某位眼科医生的狂想」（some wild wag of an oculist）——不是神圣起源，而是商业行为。</p>
+<p class="ann-line">它们在褪色、被遗忘——正如上帝在现代社会中被遗忘。</p>
+<p class="ann-line">在小说的结尾，威尔逊指着这些眼睛说「God sees everything」——将广告牌与上帝直接等同。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代的广告牌文化与消费主义</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">1920年代是美国户外广告的黄金时代。公路两侧的巨大广告牌是消费主义的最鲜明标志。</p>
+<p class="ann-line">埃克尔堡博士的广告牌本来是一个商业行为——吸引病人——但它最终变成了一个哲学存在。</p>
+<p class="ann-line">菲茨杰拉德以此讽刺了现代社会中商品符号如何取代了宗教符号：广告牌上的眼睛 ≠ 上帝的眼睛，但人们已经无法分辨二者的区别。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">颜色对比：灰 vs. 蓝 vs. 黄</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">整段建立了一个极其克制的颜色系统：</p>
+<p class="ann-line">灰色（ashes, grey land, bleak dust）——占统治地位，代表死亡和颓废。</p>
+<p class="ann-line">蓝色（blue and gigantic eyes）——唯一的生命色，代表观察和意识（但它是人造的）。</p>
+<p class="ann-line">黄色（enormous yellow spectacles）——眼镜框的颜色，代表商业和腐烂。</p>
+<p class="ann-line">菲茨杰拉德用三种颜色构建了一个单调的、后工业化的地狱景象。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch2s2">
+  <div class="sec-heading"><span class="sec-num">第二节</span><span class="sec-label">威尔逊的修车铺：梅朵登场</span></div>
+  <div class="original">
+    <p>She nodded and moved away from him just as George Wilson emerged with two chairs from his office door.</p>
+    <p>We waited for her down the road and out of sight. It was a few days before the Fourth of July, and a grey, scrawny Italian child was setting torpedoes in a row along the railroad track.</p>
+    <p>“Terrible place, isn’t it,” said Tom, exchanging a frown with Doctor Eckleburg.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">a block of yellow brick / sitting on a chair / the only car visible</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【a block of yellow brick】一块黄色砖头——block 暗示了笨重、黯淡、缺乏美感。</p>
+<p class="ann-line">【sitting on a chair】坐在椅子上——这是尼克对威尔逊的第一印象：他的存在被定义为一个静止的姿势。</p>
+<p class="ann-line">【the only car visible】唯一可见的车——visible 是关键：在这个以汽车为中心的场所，visible 的车却是被拆解的、无用的。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — she was in her middle thirties...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line">she (Myrtle)</p>
+        <p class="ann-line flow">→ STATE: was in her middle thirties</p>
+        <p class="ann-line flow">→ STATE: faintly stout</p>
+
+        <p class="ann-line flow">→ STATE（外表细节）</p>
+        <p class="ann-line">she carried her surplus flesh sensuously</p>
+        <p class="ann-line flow">  as some women can</p>
+        <p class="ann-line flow">    surplus flesh → 多余的肉（不是 fat — 暗示丰富和多余）</p>
+        <p class="ann-line flow">    sensuously → 感官地、性感地（将「多余的肉」转化为魅力）</p>
+
+        <p class="ann-line flow">→ STATE（面部）</p>
+        <p class="ann-line">Her face...contained no facet or gleam of beauty,</p>
+        <p class="ann-line flow">  but there was an immediately perceptible vitality</p>
+        <p class="ann-line flow">    └─ about her as if the nerves of her body</p>
+        <p class="ann-line flow">       were continually smouldering</p>
+        <p class="ann-line flow">    no gleam of beauty → 没有一丝美丽的光芒（gleam = 闪光是关键的缺席）</p>
+        <p class="ann-line flow">    vitality → 生命力（这取代了美丽的位置）</p>
+        <p class="ann-line flow">    smouldering → 闷烧的（内部的火 — Daisy 没有的东西）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 灵魂有活力但脸无美感 — 这是菲茨杰拉德对梅朵的双层定义</p>
+        <p class="ann-line">• smouldering 用火来描述生命力 — 既是热量也是危险</p>
+        <p class="ann-line">• 与 Daisy 的空灵/轻盈形成精确的反差</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">Daisy 与 Myrtle：光明与火焰的对比</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">菲茨杰拉德精心设计了 Daisy 和 Myrtle 的对比：</p>
+<p class="ann-line">Daisy → 光（bright, gleaming, white, airy）→ 代表老钱的轻盈和精神性。</p>
+<p class="ann-line">Myrtle → 火（smouldering, vitality, dusky, dark）→ 代表新钱的欲望和生命力。</p>
+<p class="ann-line">Daisy 是「声音」，Myrtle 是「身体」。Tom 在二者之间的摆动暗示了他自己的分裂——他需要 Daisy 的阶级，但渴望 Myrtle 的肉体。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">修车铺作为阶级象征</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">威尔逊的修车铺位于灰烬谷——这是纽约和长岛之间的工业荒地。</p>
+<p class="ann-line">在这个「地点即阶层」的小说中，修车铺标志着威尔逊/梅朵的阶级地位：他们不是富裕的郊区居民，而是在城市的废弃物中谋生的人。</p>
+<p class="ann-line">Tom 可以自由地进出这个空间——他的阶级使他可以在任何地方都感到自在。但威尔逊和梅朵被固定在这里。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">smouldering 的多重暗示</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">smouldering（闷烧的）是菲茨杰拉德为梅朵选择的完美词汇：</p>
+<p class="ann-line">① 火 = 激情和欲望（与 Daisy 的空灵形成对比）。</p>
+<p class="ann-line">② 闷烧 = 被压制的、不公开的——暗示梅朵的欲望在地下运行。</p>
+<p class="ann-line">③ 闷烧的火最终可能引发大火——预示了后续的悲剧（梅朵被车撞死）。</p>
+<p class="ann-line">菲茨杰拉德用一个词完成了人物塑造、主题铺垫和叙事预兆。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch2s3">
+  <div class="sec-heading"><span class="sec-num">第三节</span><span class="sec-label">通往纽约的火车：梅朵的变形记</span></div>
+  <div class="original">
+    <p>“What kind are they?” asked Mrs. Wilson eagerly as he came to the taxi window.</p>
+    <p>“All kinds. What kind do you want, lady?”</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">the interior of her house / changed her costume</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【the interior of her house】她公寓的内部——interior 暗示隐私和不可见性，与前文修车铺的公开性形成对比。</p>
+<p class="ann-line">【changed her costume】换装——costume 而非 clothes/dress。costume 暗示角色扮演——梅朵在换衣服的同时也在换身份。</p>
+<p class="ann-line">【an elaborate afternoon dress】精心制作的下午礼服——elaborate 暗示了她角色的刻意性，如舞台服装。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">the intense vitality...was converted into impressive hauteur</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「the intense vitality...was converted into impressive hauteur」</p>
+<p class="ann-line">was converted ——被动语态，暗示梅朵的转变不是自然发生的，而是被某种力量（她的阶级欲望）「转化」的。</p>
+<p class="ann-line">hauteur /əʊˈtɜːr/ — 傲慢、目中无人。法语借词，保留了法语的拼写和发音。</p>
+<p class="ann-line">从 vitality（生命力）到 hauteur（傲慢）——菲茨杰拉德暗示阶级扮演最终会消灭人性。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — her laughter, her gestures, her assertions...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT（三个并列 — 梅朵的表演）</p>
+        <p class="ann-line">her laughter,</p>
+        <p class="ann-line">her gestures,</p>
+        <p class="ann-line">her assertions</p>
+
+        <p class="ann-line flow">→ ACTION（它们的转变）</p>
+        <p class="ann-line">became more violently affected moment by moment</p>
+        <p class="ann-line flow">  violently affected → 暴力般地做作（violently 修饰 affected）</p>
+        <p class="ann-line flow">  moment by moment → 每时每刻都在加强 —— 暗示表演的失控</p>
+
+        <p class="ann-line flow">→ EFFECT（对她周围人的影响）</p>
+        <p class="ann-line">as she expanded the room grew smaller around her</p>
+        <p class="ann-line flow">  └─ until she seemed to be revolving</p>
+        <p class="ann-line flow">     └─ on a noisy, creaking pivot</p>
+        <p class="ann-line flow">        └─ through the smoky air</p>
+
+        <p class="ann-line flow">  she expanded / room grew smaller → 物理空间的压缩</p>
+        <p class="ann-line flow">  revolving on a creaking pivot → 在一个吱吱作响的轴上旋转</p>
+        <p class="ann-line flow">    noisy → 声音（梅朵的表演）</p>
+        <p class="ann-line flow">    creaking → 刺耳的（二手词 — 暗示廉价和破碎）</p>
+        <p class="ann-line flow">    pivot → 轴（暗示她的身体成为了房间的旋转中心）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 梅朵的表演创造了空间效应 —— 她膨胀，房间收缩</p>
+        <p class="ann-line">• revolving on a creaking pivot 暗示了旋转木马般的堕落感</p>
+        <p class="ann-line">• 这整段话全程没有直接评价梅朵，但每个词都在审判她</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">空间变形与阶级表演</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「as she expanded the room grew smaller around her」</p>
+<p class="ann-line">菲茨杰拉德在这里使用了「空间变形」技术——人物的情感状态扭曲了物理空间。</p>
+<p class="ann-line">梅朵膨胀（expanded）= 她的表演欲在增长。房间缩小（grew smaller）= 观众感到被压迫。</p>
+<p class="ann-line">「revolving on a creaking pivot」暗示了旋转木马的运动——重复、无目的、令人不安的廉价娱乐。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代的公寓文化与婚外情</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">Tom 在纽约为梅朵租了公寓——这是1920年代富人维持婚外情的标准操作。</p>
+<p class="ann-line">公寓（apartment）区别于家（home）——它是一种临时的、功能性空间，专门为婚外情而存在。</p>
+<p class="ann-line">梅朵在公寓里可以「扮演」上流社会的贵妇——但这种扮演越深入，就越暴露出她的阶级焦虑和表演的拙劣。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">一系列-ing 分词的动能效应</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">revolving, creaking, expanding ——三个连续的分词制造了一种旋转的、失控的动能。</p>
+<p class="ann-line">菲茨杰拉德大量使用-ing 分词来制造持续的动态效果，尤其是在描写梅朵和盖茨比的派对场景时。</p>
+<p class="ann-line">这种技术将文字转化为运动——读者不仅在阅读，也在「观看」梅朵在房间里旋转。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch2s4">
+  <div class="sec-heading"><span class="sec-num">第四节</span><span class="sec-label">一记耳光：汤姆打破梅朵的鼻子</span></div>
+  <div class="original">
+    <p>“It’s just a crazy old thing,” she said. “I just slip it on sometimes when I don’t care what I look like.”</p>
+    <p>“But it looks wonderful on you, if you know what I mean,” pursued Mrs. McKee. “If Chester could only get you in that pose I think he could make something of it.”</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">Daisy! Daisy! Daisy! / a short deft movement</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【Daisy! Daisy! Daisy!】三个连续的 Daisy —— 梅朵在重复黛西的名字，挑战汤姆的界限。</p>
+<p class="ann-line">【making a short deft movement】short（短促的）、deft（灵巧的）——汤姆打人的动作被描述为精巧、熟练，暗示这不是第一次。</p>
+<p class="ann-line">【her nose broken】鼻子被打断了——broken 是全书最直接的体力暴力描写。菲茨杰拉德没有渲染暴力，而是让它简洁而可怕。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — Making a short deft movement...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line">Tom Buchanan</p>
+
+        <p class="ann-line flow">→ ACTION（打人）</p>
+        <p class="ann-line">Making a short deft movement,</p>
+        <p class="ann-line flow">  broke her nose with his open hand</p>
+        <p class="ann-line flow">    Making → 伴随状语（打人和说话同时发生）</p>
+        <p class="ann-line flow">    short deft → 短促 + 灵巧 = 熟练的暴力</p>
+        <p class="ann-line flow">    open hand → 张开的手掌（不是拳头 — 老钱的暴力是冷静的）</p>
+
+        <p class="ann-line flow">→ CONSEQUENCE（后果）</p>
+        <p class="ann-line">there were bloody towels upon the bathroom floor,</p>
+        <p class="ann-line flow">  and women&#x27;s voices scolding,</p>
+        <p class="ann-line flow">  and high over the confusion</p>
+        <p class="ann-line flow">    a long broken wail of pain</p>
+        <p class="ann-line flow">    bloody towels → 血色的毛巾（物质的暴力痕迹）</p>
+        <p class="ann-line flow">    scolding → 责备声（who? 未被指明）</p>
+        <p class="ann-line flow">    broken wail of pain → 破碎的痛苦哀号</p>
+        <p class="ann-line flow">      broken → 既是「破碎的」也是「被打破的」（双关语）</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 暴力的身体动作（short deft movement）只用三个词</p>
+        <p class="ann-line">• 后果用三个并列的 and 从句 = 场景的混乱和失控</p>
+        <p class="ann-line">• long broken wail — broken 双关：声音的破裂和鼻子的被打断</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">尼克作为暴力见证者</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">这一暴力场景的叙述极其克制——这与尼克作为叙事者的道德位置有关。</p>
+<p class="ann-line">尼克没有出手阻止汤姆——他只是一个观察者。这揭示了尼克的道德局限性：</p>
+<p class="ann-line">他「保留判断」，但保留判断有时等于纵容暴力。</p>
+<p class="ann-line">菲茨杰拉德通过尼克的沉默暗示了旁观者的道德共谋——这是小说最令人不安的层面之一。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr cult" onclick="toggle(this)">
+        <span class="cat-badge">文化背景</span>
+        <span class="card-term">1920年代的家庭暴力与法律真空</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">1922年的美国，家庭暴力在很大程度上不被视为犯罪。男性对女性的身体暴力在私人领域被容忍。</p>
+<p class="ann-line">汤姆打梅朵不是「斗殴」，因为权力的天平完全倾斜：他是男人、富人、白人、耶鲁出身——他是不可触碰的。</p>
+<p class="ann-line">菲茨杰拉德以此展示了阶级权力如何渗透到最微观的人际暴力中。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">and...and...and 的混乱节奏</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「there were bloody towels...and women&#x27;s voices scolding, and high over the confusion a long broken wail」</p>
+<p class="ann-line">连续的 and 制造了一种无法停顿的混乱节奏——尼克想一口气说完，仿佛说出来就能把它甩掉。</p>
+<p class="ann-line">这种「and 堆积」的写法是菲茨杰拉德在描写混乱和暴力场景时的标志性技术——语法结构模拟了场景的失控感。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+<section class="para-section" id="ch2s5">
+  <div class="sec-heading"><span class="sec-num">第五节</span><span class="sec-label">醉酒叙事：尼克的主观视角崩塌</span></div>
+  <div class="original">
+    <p>She nodded.</p>
+    <p>“I’m scared of him. I’d hate to have him get anything on me.”</p>
+  </div>
+  <div class="cards-grid">
+    <div class="card open">
+      <div class="card-hdr vocab" onclick="toggle(this)">
+        <span class="cat-badge">词汇</span>
+        <span class="card-term">I was within and without / simultaneously enchanted and repelled</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">【within and without】既在内部也在外部——within 指物理空间内部（公寓内部），without 指情感距离（从外部观看）。</p>
+<p class="ann-line">【simultaneously enchanted and repelled】同时被魅惑和被排斥——矛盾的心理状态：被吸引但不认可，被卷入但想要退出。</p>
+<p class="ann-line">【inexhaustible variety of life】生命无穷无尽的多样性——尼克站在窗前看着纽约的夜景，产生了一种浪漫主义的感慨。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr gram" onclick="toggle(this)">
+        <span class="cat-badge">语法</span>
+        <span class="card-term">I was within and without...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">「I was within and without, simultaneously enchanted and repelled by the inexhaustible variety of life.」</p>
+<p class="ann-line">within and without —— 空间矛盾（既是外部视角也是内部参与者）。</p>
+<p class="ann-line">simultaneously enchanted and repelled —— 情感矛盾（既被吸引又被排斥）。</p>
+<p class="ann-line">这是全书对尼克叙事位置的精确总结：他永远在各种对立力量之间摇摆，既不真正属于任何一方，又无法完全抽身。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr structure" onclick="toggle(this)">
+        <span class="cat-badge">句子结构</span>
+        <span class="card-term">句子结构 — I have been drunk just twice...</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+        <p class="ann-line flow-header">句子结构 · 按阅读顺序展开</p>
+
+        <p class="ann-line flow">SUBJECT</p>
+        <p class="ann-line">I</p>
+        <p class="ann-line flow">→ STATE: have been drunk just twice in my life (so far)</p>
+        <p class="ann-line flow">  and the second time was that afternoon</p>
+        <p class="ann-line flow">    just twice → 只有两次（强调罕见性）</p>
+        <p class="ann-line flow">    the second time was that afternoon → 第二次就是今天下午</p>
+
+        <p class="ann-line flow">→ CONSEQUENCE（醉酒的效果）</p>
+        <p class="ann-line">everything that happened has a dim, hazy cast over it</p>
+        <p class="ann-line flow">  although until after eight o&#x27;clock</p>
+        <p class="ann-line flow">  the apartment was full of cheerful sun</p>
+        <p class="ann-line flow">    dim → 昏暗的（视觉模糊）</p>
+        <p class="ann-line flow">    hazy → 朦胧的（认知模糊）</p>
+        <p class="ann-line flow">    cheerful sun → 欢快的阳光（讽刺——在暴力之后）</p>
+
+        <p class="ann-line flow">→ SCENE（破碎的记忆片段）</p>
+        <p class="ann-line">I was sitting on the bed...</p>
+        <p class="ann-line flow">  reading a chapter of Simon Called Peter —</p>
+        <p class="ann-line flow">  either it was terrible stuff or the whiskey</p>
+        <p class="ann-line flow">  distorted things</p>
+        <p class="ann-line flow">    Simon Called Peter → 当时流行的通俗小说</p>
+        <p class="ann-line flow">    terrible stuff or whiskey distorted → 分不清是书写得烂还是我喝多了</p>
+
+        <p class="ann-line flow-header">结构效果</p>
+        <p class="ann-line">• 尼克的醉酒是在暴力之后的逃避 — 整个叙事在此变得不可靠</p>
+        <p class="ann-line">• dim, hazy 双重形容词标记了叙事的认知降级</p>
+        <p class="ann-line">• 尼克的「诚实」在此受到挑战：他真的记得发生了什么吗？</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr lit" onclick="toggle(this)">
+        <span class="cat-badge">文学手法</span>
+        <span class="card-term">不可靠叙事者的醉酒叙事</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">尼克在整本书中只有两次醉酒 —— 第二次就是今天下午（目睹暴力之后）。</p>
+<p class="ann-line">醉酒叙事的引入制造了一个问题：尼克在此之后的叙述有多可靠？</p>
+<p class="ann-line">这是菲茨杰拉德的一个聪明的叙事策略：当尼克无法面对所目睹的事情时，他让自己喝醉——这使他的叙事变得不可靠，但同时也使他不诚实变得诚实（因为他告诉了我们他不清楚）。</p>
+      </div>
+    </div>
+    <div class="card open">
+      <div class="card-hdr style" onclick="toggle(this)">
+        <span class="cat-badge">风格分析</span>
+        <span class="card-term">从具体到模糊的叙事退行</span>
+        <span class="card-toggle">▼</span>
+      </div>
+      <div class="card-body">
+<p class="ann-line">整段经历了一个从具体到模糊的「退行」运动：</p>
+<p class="ann-line">清晰的细节（the apartment was full of cheerful sun）→</p>
+<p class="ann-line">模糊的记忆（dim, hazy cast）→</p>
+<p class="ann-line">彻底的认知崩塌（either it was terrible or the whiskey distorted things）。</p>
+<p class="ann-line">这种叙事退行模拟了酒精对意识的侵蚀——读者和尼克一起失去清晰度。</p>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-divider"><div class="divider-gem"></div></div>
+
+
+</div>
+</main>
+
+<footer class="footer">
+  Iceburg DeepReading · 第一、二章完整教学版 · © 2026
+</footer>
+
+<script>
+function toggle(hdr) {
+  const card = hdr.closest(".card");
+  card.classList.toggle("open");
+}
+
+document.querySelectorAll(".card-hdr.structure").forEach(hdr => {
+  hdr.closest(".card").classList.add("open");
+});
+
+// Chapter tab switching
+(function() {
+  var allContents = document.querySelectorAll('.chapter-content');
+  var allTabs = document.querySelectorAll('.navbar-links a[href^="#ch"]');
+  
+  function switchChapter(chNum) {
+    allContents.forEach(function(c) {
+      c.classList.toggle('active', c.getAttribute('data-chapter') === chNum);
+    });
+    allTabs.forEach(function(t) {
+      t.classList.toggle('active-tab', t.getAttribute('href') === '#ch' + chNum);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  
+  allTabs.forEach(function(tab) {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+      var chNum = this.getAttribute('href').replace('#ch', '');
+      switchChapter(chNum);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

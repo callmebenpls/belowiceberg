@@ -1,8 +1,0 @@
-pyproject.toml
-app/__init__.py
-app/routes/__init__.py
-belowiceberg_server.egg-info/PKG-INFO
-belowiceberg_server.egg-info/SOURCES.txt
-belowiceberg_server.egg-info/dependency_links.txt
-belowiceberg_server.egg-info/requires.txt
-belowiceberg_server.egg-info/top_level.txt
