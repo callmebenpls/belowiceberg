@@ -128,3 +128,33 @@
 }
 
 .bi-pop-err { color: #b03030; padding: 14px; font-size: 13px; }
+
+/* Fix: sticky navbar (~48px) covers chapter anchors when smooth-scrolled to. */
+.chapter-heading { scroll-margin-top: 64px; }
+.para-section    { scroll-margin-top: 64px; }
+
+/* The new AI-authored card inserted inside .para-section. */
+.bi-ai-card { animation: bi-fadein 0.4s; margin-top: 0.8rem; }
+.bi-ai-card .card-term .bi-ai-badge {
+  background: #111; color: #fff; font-size: 9px; padding: 1px 5px;
+  border-radius: 3px; letter-spacing: 0.08em; margin-left: 6px;
+  vertical-align: middle;
+}
+.bi-ai-card .card-body p.ann-line { margin: 0 0 0.5em 0; }
+.bi-ai-card .card-body p.ann-line:last-child { margin-bottom: 0; }
+.bi-ai-card .card-body code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(184,148,46,0.08); padding: 1px 5px; border-radius: 3px;
+  font-size: 0.85em;
+}
+
+/* Popover body markdown rendering */
+.bi-pop-body .bi-stream p { margin: 0 0 0.6em 0; }
+.bi-pop-body .bi-stream p:last-child { margin-bottom: 0; }
+.bi-pop-body .bi-stream strong { font-weight: 700; color: var(--ink, #1a1a15); }
+.bi-pop-body .bi-stream em { font-style: italic; }
+.bi-pop-body .bi-stream code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(184,148,46,0.08); padding: 1px 5px; border-radius: 3px;
+  font-size: 0.85em;
+}
