@@ -76,3 +76,37 @@ def test_post_rejects_bad_slug(client):
             "selectedText": "x", "responseMarkdown": "y"}
     r = client.post("/api/notes/..%2Fetc%2Fpasswd", json=note)
     assert r.status_code in (400, 404)
+
+def test_query_requires_auth(client):
+    r = client.post("/api/query", json={
+        "category": "vocab", "selectedText": "x", "paraContext": "y"
+    })
+    assert r.status_code == 401
+
+def test_query_streams(client, httpx_mock):
+    _login(client)
+    httpx_mock.add_response(
+        url="https://api.deepseek.com/chat/completions",
+        method="POST",
+        text=(
+            'data: {"choices":[{"delta":{"content":"hi"}}]}\n\n'
+            'data: [DONE]\n\n'
+        ),
+        headers={"Content-Type": "text/event-stream"},
+    )
+    with client.stream("POST", "/api/query", json={
+        "category": "vocab",
+        "selectedText": "advice",
+        "paraContext": "He gave me some advice.",
+    }) as r:
+        assert r.status_code == 200
+        body = b"".join(r.iter_bytes()).decode()
+    assert "data: hi" in body
+    assert "data: [DONE]" in body
+
+def test_query_bad_category(client):
+    _login(client)
+    r = client.post("/api/query", json={
+        "category": "bogus", "selectedText": "x", "paraContext": "y"
+    })
+    assert r.status_code == 422  # pydantic validation
