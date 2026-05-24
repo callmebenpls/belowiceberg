@@ -1,0 +1,318 @@
+/* Login surface — shared styles for all 3 variations. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #fafaf7; --bg2: #f2efe7; --bg3: #e8e4d8; --bg4: #ded9cb;
+  --gold: #b8942e; --gold-dim: rgba(184,148,46,0.40);
+  --gold-mid: rgba(184,148,46,0.18); --gold-pale: rgba(184,148,46,0.08);
+  --border: rgba(184,148,46,0.25);
+  --ink: #1a1a15; --text: #2d2a20; --text2: #6b5e3e; --text3: #a89870;
+  --vocab: #3a7bb5; --gram: #3a8b5e;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* Each artboard is its own scroll/render region. Reset baseline inside. */
+.lg {
+  width: 100%; height: 100%;
+  font-family: 'Lora','Noto Serif SC',serif;
+  color: var(--text);
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* iPhone-ish status bar for mobile artboards */
+.lg-statusbar {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 44px; padding: 0 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  font-size: 14px; font-weight: 600; color: var(--ink);
+  z-index: 10;
+  pointer-events: none;
+}
+.lg-statusbar .right { display: flex; gap: 6px; align-items: center; }
+.lg-statusbar svg { display: block; }
+
+/* Parchment field with ruled-paper texture + warm radial */
+.lg-parchment {
+  background:
+    radial-gradient(ellipse at 50% 25%, rgba(184,148,46,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 90%, rgba(122,79,155,0.04) 0%, transparent 50%),
+    var(--bg);
+  position: relative;
+}
+.lg-parchment::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 60px,
+    rgba(184,148,46,0.035) 60px, rgba(184,148,46,0.035) 61px);
+}
+
+/* B社 seal */
+.lg-seal {
+  border: 1.5px solid var(--gold); transform: rotate(45deg);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto;
+}
+.lg-seal span {
+  font-family: 'Noto Serif SC', serif; color: var(--gold);
+  transform: rotate(-45deg); display: block; line-height: 1;
+  letter-spacing: -0.02em;
+}
+.lg-seal-lg { width: 90px; height: 90px; border-width: 2px; }
+.lg-seal-lg span  { font-size: 30px; }
+.lg-seal-md { width: 64px; height: 64px; }
+.lg-seal-md span  { font-size: 22px; }
+.lg-seal-sm { width: 48px; height: 48px; border-width: 1.2px; }
+.lg-seal-sm span  { font-size: 16px; }
+
+/* Gold gradient hairline rule */
+.lg-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: 0 auto;
+}
+
+/* Eyebrow */
+.lg-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--gold);
+  text-align: center;
+}
+.lg-eyebrow-zh {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px; letter-spacing: 0.22em;
+  color: var(--gold); text-align: center;
+}
+
+/* Headlines */
+.lg-h1-en {
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.02em;
+  text-align: center;
+}
+.lg-h1-zh {
+  font-family: 'Noto Serif SC', serif; font-weight: 300;
+  color: var(--gold); letter-spacing: 0.18em;
+  text-align: center;
+}
+
+/* Body sub-paragraph */
+.lg-sub {
+  font-family: 'Noto Serif SC', serif;
+  color: var(--text2); text-align: center;
+  line-height: 1.8;
+}
+
+/* OAuth buttons */
+.lg-btn {
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; width: 100%;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 15px; font-weight: 500;
+  padding: 14px 22px; border-radius: 4px;
+  cursor: pointer; user-select: none;
+  transition: transform 0.18s, opacity 0.18s, background 0.18s, border-color 0.18s;
+  border: 0.5px solid transparent;
+  white-space: nowrap;
+}
+.lg-btn:hover { transform: translateY(-1px); }
+.lg-btn-apple {
+  background: #000; color: #fff;
+  letter-spacing: 0.02em;
+}
+.lg-btn-apple:hover { opacity: 0.88; }
+.lg-btn-google {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--border);
+  letter-spacing: 0.02em;
+}
+.lg-btn-google:hover { background: var(--gold-pale); border-color: var(--gold); }
+.lg-btn-gold {
+  background: var(--gold); color: var(--bg);
+  border-color: var(--gold);
+}
+.lg-btn-gold:hover { opacity: 0.88; }
+.lg-btn-outline {
+  background: transparent; color: var(--text);
+  border-color: var(--border);
+}
+.lg-btn-outline:hover { border-color: var(--gold); background: var(--gold-pale); }
+
+.lg-btn svg { flex-shrink: 0; }
+
+/* "or" divider */
+.lg-or {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--text3);
+}
+.lg-or::before, .lg-or::after {
+  content: ''; flex: 1; height: 0.5px; background: var(--border);
+}
+
+/* Secondary link */
+.lg-link {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; color: var(--text2);
+  text-decoration: none; cursor: pointer;
+  transition: color 0.18s;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.lg-link:hover { color: var(--gold); }
+.lg-link-gold { color: var(--gold); }
+
+/* Tabs: 登录 / 注册 */
+.lg-tabs {
+  display: inline-flex; align-items: center;
+  border: 0.5px solid var(--border); border-radius: 4px;
+  padding: 3px; background: var(--bg2);
+  align-self: center;
+}
+.lg-tab {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; padding: 6px 16px;
+  border-radius: 3px; cursor: pointer; user-select: none;
+  color: var(--text2);
+  transition: background 0.18s, color 0.18s;
+  letter-spacing: 0.04em;
+}
+.lg-tab.active { background: var(--bg); color: var(--ink); box-shadow: 0 1px 2px rgba(44,36,20,0.06); }
+
+/* Footer microcopy */
+.lg-footer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text3);
+  text-align: center; line-height: 1.9;
+}
+.lg-footer a { color: var(--text3); text-decoration: none; cursor: pointer; }
+.lg-footer a:hover { color: var(--gold); }
+
+/* Card chrome (Variation C) */
+.lg-card {
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  box-shadow: -3px 3px 0 var(--gold-dim), 0 24px 80px rgba(44,36,20,0.18);
+  position: relative;
+}
+.lg-card-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  color: var(--text3);
+  background: var(--bg);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: color 0.18s, border-color 0.18s;
+}
+.lg-card-close:hover { color: var(--gold); border-color: var(--gold); }
+
+/* Marketing-hero background (Variation C) — dimmed */
+.lg-hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(184,148,46,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 85%, rgba(122,79,155,0.05) 0%, transparent 50%),
+    var(--bg);
+  filter: blur(2px);
+  z-index: 0;
+}
+.lg-hero-bg::before {
+  content: ''; position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(0deg, transparent, transparent 60px,
+    rgba(184,148,46,0.035) 60px, rgba(184,148,46,0.035) 61px);
+}
+.lg-hero-dim {
+  position: absolute; inset: 0; background: rgba(44,36,20,0.30);
+  z-index: 1;
+}
+
+/* Illustration pane (Variation B) */
+.lg-illust {
+  position: relative; overflow: hidden;
+  background: var(--bg2);
+}
+.lg-illust img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block;
+}
+.lg-illust-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, transparent 30%, rgba(0,0,0,0.18) 100%);
+  pointer-events: none;
+}
+.lg-illust-mark {
+  position: absolute; bottom: 28px; left: 28px;
+  display: flex; align-items: center; gap: 12px;
+  color: rgba(255,255,255,0.92);
+  z-index: 2;
+}
+.lg-illust-mark .lg-seal {
+  border-color: rgba(255,255,255,0.85);
+}
+.lg-illust-mark .lg-seal span { color: rgba(255,255,255,0.95); }
+.lg-illust-mark .text {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 14px; letter-spacing: 0.04em;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* Trouble-screen advice row */
+.lg-advice {
+  background: var(--bg2);
+  border: 0.5px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  display: flex; gap: 12px; align-items: flex-start;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px; color: var(--text2);
+  line-height: 1.75;
+}
+.lg-advice-num {
+  flex-shrink: 0;
+  font-family: 'Playfair Display', serif; font-weight: 700;
+  color: var(--gold); font-size: 16px; line-height: 1.2;
+  width: 22px;
+}
+
+/* Field stack for email-fallback (used by some variations) */
+.lg-field {
+  display: flex; flex-direction: column; gap: 6px;
+  width: 100%;
+}
+.lg-field label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text3);
+}
+.lg-field input {
+  font-family: 'Lora', serif; font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.18s, background 0.18s;
+}
+.lg-field input:focus { border-color: var(--gold); background: var(--bg); }
+
+/* Tag inside trouble screen */
+.lg-tag {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--gold);
+  background: var(--gold-pale);
+  border: 0.5px solid var(--gold-dim);
+  padding: 3px 8px; border-radius: 3px;
+}
