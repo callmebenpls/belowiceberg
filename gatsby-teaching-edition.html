@@ -37,6 +37,8 @@ html { scroll-behavior: smooth; color-scheme: light; }
 .chapter-content { display: none; }
 .chapter-content.active { display: block; }
 .navbar-links a.active-tab { color: var(--gold); background: var(--gold-pale); font-weight: 500; }
+.navbar-links a.tab-unavailable { color: var(--text3); opacity: 0.45; cursor: not-allowed; }
+.navbar-links a.tab-unavailable:hover { background: transparent; color: var(--text3); }
 
 body {
   background: var(--bg);
@@ -3275,17 +3277,47 @@ document.querySelectorAll(".card-hdr.structure").forEach(hdr => {
 (function() {
   var allContents = document.querySelectorAll('.chapter-content');
   var allTabs = document.querySelectorAll('.navbar-links a[href^="#ch"]');
-  
+  var available = new Set();
+  allContents.forEach(function(c) { available.add(c.getAttribute('data-chapter')); });
+
+  // Visually mark unavailable chapter tabs (no content yet)
+  allTabs.forEach(function(t) {
+    var n = t.getAttribute('href').replace('#ch', '');
+    if (!available.has(n)) {
+      t.classList.add('tab-unavailable');
+      t.setAttribute('title', '此章节尚未上架');
+    }
+  });
+
   function switchChapter(chNum) {
+    if (!available.has(chNum)) {
+      // Brief inline hint, don't blank the page.
+      var hint = document.createElement('div');
+      hint.textContent = '第 ' + chNum + ' 章尚未上架';
+      hint.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);' +
+        'background:#1a1a15;color:#fafaf7;padding:8px 16px;border-radius:6px;' +
+        'font-family:"Noto Serif SC",serif;font-size:13px;z-index:9999;' +
+        'box-shadow:0 4px 14px rgba(0,0,0,0.25);opacity:0;transition:opacity 0.18s;';
+      document.body.appendChild(hint);
+      requestAnimationFrame(function(){ hint.style.opacity = '1'; });
+      setTimeout(function(){
+        hint.style.opacity = '0';
+        setTimeout(function(){ hint.remove(); }, 200);
+      }, 1600);
+      return;
+    }
     allContents.forEach(function(c) {
       c.classList.toggle('active', c.getAttribute('data-chapter') === chNum);
     });
     allTabs.forEach(function(t) {
       t.classList.toggle('active-tab', t.getAttribute('href') === '#ch' + chNum);
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to the chapter heading (uses scroll-margin-top in annotate.css).
+    var target = document.getElementById('ch' + chNum);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-  
+
   allTabs.forEach(function(tab) {
     tab.addEventListener('click', function(e) {
       e.preventDefault();
