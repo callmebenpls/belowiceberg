@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BelowIceberg · B社 · 冰山之下·深度精读</title>
+<title>BelowIceberg · B社 · 深度精读</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ══ DESIGN TOKENS — exactly matching gatsby-teaching-edition.html ══════ */
@@ -61,7 +61,7 @@ body {
 .nav-logo { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; }
 
 .nav-seal {
-  width: 30px; height: 30px;
+  width: 34px; height: 34px;
   border: 1px solid var(--gold);
   transform: rotate(45deg);
   display: flex; align-items: center; justify-content: center;
@@ -69,9 +69,9 @@ body {
 }
 .nav-seal span {
   font-family: 'Noto Serif SC', serif;
-  font-size: 13px; color: var(--gold);
+  font-size: 11px; color: var(--gold);
   transform: rotate(-45deg);
-  display: block; line-height: 1;
+  display: block; line-height: 1; letter-spacing: -0.02em;
 }
 
 .nav-brand {
@@ -155,9 +155,9 @@ body {
 }
 .hero-seal span {
   font-family: 'Noto Serif SC', serif;
-  font-size: 28px; color: var(--gold);
+  font-size: 22px; color: var(--gold);
   transform: rotate(-45deg);
-  display: block; line-height: 1;
+  display: block; line-height: 1; letter-spacing: -0.02em;
 }
 
 .hero-eyebrow {
@@ -403,6 +403,42 @@ body {
 }
 
 /* each book gets a warm tinted parchment background */
+.bc-illustrated { background: var(--bg2); position: relative; }
+.bc-art {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  filter: saturate(1.02);
+}
+.bc-label-on-art {
+  color: rgba(255,255,255,0.78);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  z-index: 2;
+}
+.bc-plate {
+  position: absolute; left: 0.9rem; right: 0.9rem; bottom: 1.6rem;
+  background: rgba(250,250,247,0.95);
+  border: 0.5px solid var(--border);
+  border-radius: 4px;
+  padding: 0.65rem 0.9rem 0.7rem;
+  text-align: center; z-index: 2;
+  box-shadow: 0 2px 12px rgba(44,36,20,0.18);
+  backdrop-filter: blur(2px);
+}
+.bc-plate-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--ink); line-height: 1.18;
+  margin-bottom: 0.2rem;
+}
+.bc-plate-zh {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.74rem; color: var(--gold);
+  letter-spacing: 0.1em; margin-bottom: 0.3rem;
+}
+.bc-plate-author {
+  font-family: 'Lora', serif;
+  font-size: 0.62rem; font-style: italic; color: var(--text2);
+}
 .bc-gatsby  { background: linear-gradient(150deg, #f5f0e0 0%, #ede5c8 60%, #e0d8b8 100%); }
 .bc-henry   { background: linear-gradient(150deg, #f0f0e8 0%, #e8e8d8 60%, #d8d8c0 100%); }
 .bc-sun     { background: linear-gradient(150deg, #f5ede0 0%, #edd8c0 60%, #e0c8a8 100%); }
@@ -698,10 +734,10 @@ body {
 <!-- ══ NAV ══════════════════════════════════════════════════════════════ -->
 <nav class="nav">
   <a href="#top" class="nav-logo">
-    <div class="nav-seal"><span>B</span></div>
+    <div class="nav-seal"><span>B社</span></div>
     <div class="nav-brand">
       <span class="nav-brand-en">BelowIceberg</span>
-      <span class="nav-brand-zh">B社 · 冰山之下</span>
+      <span class="nav-brand-zh">B社</span>
     </div>
   </a>
   <ul class="nav-links">
@@ -716,10 +752,10 @@ body {
 <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
 <section class="hero" id="top">
   <div class="hero-inner">
-    <div class="hero-seal"><span>B</span></div>
+    <div class="hero-seal"><span>B社</span></div>
     <p class="hero-eyebrow">B社 · 精选文学深度注解</p>
     <h1 class="hero-title">BelowIceberg</h1>
-    <p class="hero-title-zh">冰山之下 · 深度精读</p>
+    <p class="hero-title-zh">B社 · 深度精读</p>
     <div class="hero-rule"></div>
 
     <p class="hero-desc">
@@ -848,18 +884,14 @@ body {
   <div class="books-grid">
 
     <a href="/gatsby" class="book-card">
-      <div class="book-cover bc-gatsby">
-        <div class="bc-deco-gatsby"></div>
-        <span class="bc-vol">Vol. I</span>
-        <svg width="72" height="72" viewBox="0 0 72 72" style="position:absolute;opacity:0.18">
-          <circle cx="36" cy="36" r="30" fill="none" stroke="#b8942e" stroke-width="0.6"/>
-          <polygon points="36,8 54,36 36,44 18,36" fill="none" stroke="#b8942e" stroke-width="0.6"/>
-          <circle cx="36" cy="16" r="3.5" fill="#4caf50" opacity="0.9"/>
-        </svg>
-        <span class="bc-title-en">The Great<br>Gatsby</span>
-        <span class="bc-title-zh">了不起的盖茨比</span>
-        <span class="bc-author">F. Scott Fitzgerald</span>
-        <span class="bc-label">BelowIceberg · B社</span>
+      <div class="book-cover bc-illustrated">
+        <img class="bc-art" src="/assets/cover-art-gatsby.jpeg" alt="">
+        <div class="bc-plate">
+          <div class="bc-plate-title">The Great<br>Gatsby</div>
+          <div class="bc-plate-zh">了不起的盖茨比</div>
+          <div class="bc-plate-author">F. Scott Fitzgerald</div>
+        </div>
+        <span class="bc-label bc-label-on-art">BelowIceberg · B社</span>
       </div>
       <div class="book-meta-en">The Great Gatsby</div>
       <div class="book-meta-zh">了不起的盖茨比</div>
@@ -872,7 +904,6 @@ body {
     <div class="book-card">
       <div class="book-cover bc-henry">
         <div class="bc-deco-henry"></div>
-        <span class="bc-vol">Vol. II</span>
         <svg width="72" height="72" viewBox="0 0 72 72" style="position:absolute;opacity:0.15">
           <rect x="18" y="14" width="36" height="44" fill="none" stroke="#6a6a50" stroke-width="0.6"/>
           <line x1="18" y1="26" x2="54" y2="26" stroke="#6a6a50" stroke-width="0.4"/>
@@ -895,7 +926,6 @@ body {
     <div class="book-card">
       <div class="book-cover bc-sun">
         <div class="bc-deco-sun"></div>
-        <span class="bc-vol">Vol. III</span>
         <svg width="72" height="72" viewBox="0 0 72 72" style="position:absolute;opacity:0.15">
           <path d="M10 48 Q36 24 62 48" fill="none" stroke="#c8823c" stroke-width="0.7"/>
           <path d="M10 56 Q36 32 62 56" fill="none" stroke="#c8823c" stroke-width="0.4"/>
@@ -918,7 +948,6 @@ body {
     <div class="book-card">
       <div class="book-cover bc-falcon">
         <div class="bc-deco-falcon"></div>
-        <span class="bc-vol">Vol. IV</span>
         <svg width="72" height="72" viewBox="0 0 72 72" style="position:absolute;opacity:0.15">
           <circle cx="36" cy="32" r="16" fill="none" stroke="#3a9090" stroke-width="0.6"/>
           <path d="M26 46 Q36 54 46 46" fill="none" stroke="#3a9090" stroke-width="0.6"/>
@@ -1085,7 +1114,7 @@ body {
   <div class="footer-inner">
     <div>
       <div class="footer-logo-en">BelowIceberg</div>
-      <div class="footer-logo-zh">B社 · 冰山之下 · 深度精读</div>
+      <div class="footer-logo-zh">B社 · 深度精读</div>
       <p class="footer-desc">专为中国英语学习者设计的英文文学深度注解平台。每部经典，从六个维度逐段拆解。</p>
       <p class="footer-copy">© 2026 BelowIceberg · B社 · All rights reserved</p>
     </div>
