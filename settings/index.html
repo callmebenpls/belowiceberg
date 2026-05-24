@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B社 · 设置 · Settings</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-screen-label="Settings / 设置">
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel">
+const USER = {
+  name: '林清岚', initials: 'L', email: 'qinglan.lin@example.com',
+  joined: '2026 年 3 月', balance: 580,
+};
+
+const SECTIONS = [
+  { id: 'account',     num: '一', zh: '账户',     en: 'Account' },
+  { id: 'tokens',      num: '二', zh: '代币',     en: 'Tokens' },
+  { id: 'annotations', num: '三', zh: '注解',     en: 'Annotations' },
+  { id: 'data',        num: '四', zh: '数据与账户', en: 'Data' },
+];
+
+const CATS = [
+  { id: 'vocab',     label: '词汇' },
+  { id: 'gram',      label: '语法' },
+  { id: 'structure', label: '句子结构' },
+  { id: 'lit',       label: '文学手法' },
+  { id: 'cult',      label: '文化背景' },
+  { id: 'style-c',   label: '风格分析' },
+];
+
+const RECHARGE_TIERS = [
+  { tokens: 100,  rmb: 38,  label: '入门 · Starter'  },
+  { tokens: 300,  rmb: 98,  label: '常读 · Reader', bonus: '+30 代币', popular: true },
+  { tokens: 1000, rmb: 298, label: '深读 · Scholar', bonus: '+200 代币' },
+];
+
+const TOKEN_USES = [
+  { what: '完整教学版（含原文 · 注解 · 句法树）', cost: 500 },
+  { what: '单章试读',                            cost: 50  },
+  { what: 'EPUB 导出',                           cost: 30  },
+  { what: '编辑部按需注解（一处）',                cost: 10  },
+];
+
+// ─── ATOMS ──────────────────────────────────────────
+const Toggle = ({ on, onClick }) => (
+  <div className={`st-toggle ${on ? 'on' : ''}`} role="switch" aria-checked={on} onClick={onClick}></div>
+);
+const Segmented = ({ value, options, onChange }) => (
+  <div className="st-seg" role="radiogroup">
+    {options.map(o => (
+      <div key={o.id}
+        className={`opt ${value === o.id ? 'active' : ''}`}
+        role="radio" aria-checked={value === o.id}
+        onClick={() => onChange(o.id)}
+      >{o.label}</div>
+    ))}
+  </div>
+);
+const Field = ({ label, sub, children }) => (
+  <div className="st-field">
+    <div className="label">
+      <span className="k">{label}</span>
+      {sub && <span className="sub">{sub}</span>}
+    </div>
+    <div className="control">{children}</div>
+  </div>
+);
+
+// ─── ACCOUNT ────────────────────────────────────────
+const Account = () => (
+  <section className="st-sec" id="account">
+    <div className="st-sec-head">
+      <span className="num">一</span>
+      <h2>账户 · Account</h2>
+      <span className="meta">verified · 已验证</span>
+    </div>
+
+    <div className="st-account-card">
+      <div className="av">
+        {USER.initials}
+        <div className="edit" title="更换头像">✎</div>
+      </div>
+      <div className="right">
+        <span className="name">{USER.name}</span>
+        <span className="email">{USER.email}</span>
+        <span className="meta">加入于 {USER.joined}</span>
+      </div>
+    </div>
+
+    <Field label="姓名 · Display name" sub="出现在注解评论与你的书房页面。">
+      <input className="st-input" defaultValue={USER.name} />
+    </Field>
+
+    <Field label="邮箱 · Email" sub="用于登录与编辑部信件投递。">
+      <span className="st-value">
+        {USER.email} <a className="editlink">更换 →</a>
+      </span>
+    </Field>
+  </section>
+);
+
+// ─── TOKENS ─────────────────────────────────────────
+const Tokens = ({ s, set }) => (
+  <section className="st-sec" id="tokens">
+    <div className="st-sec-head">
+      <span className="num">二</span>
+      <h2>代币 · Tokens</h2>
+      <span className="meta">books · exports · annotations</span>
+    </div>
+
+    {/* Balance hero */}
+    <div className="st-token-balance">
+      <div className="left">
+        <span className="ey">YOUR BALANCE · 余额</span>
+        <span className="num">{USER.balance.toLocaleString()}<small> 代币</small></span>
+        <span className="sub">够再买 1 部教学版 + 2 次 EPUB 导出</span>
+      </div>
+      <button className="st-cta-gold">充值 →</button>
+    </div>
+
+    <Field label="充值套餐 · Recharge" sub="代币不会过期。在 B社 内可用于购买教学版、单章试读、EPUB 导出、按需注解。">
+      <div></div>
+    </Field>
+
+    <div className="st-tiers">
+      {RECHARGE_TIERS.map(t => (
+        <button key={t.tokens} className={`st-tier ${t.popular ? 'popular' : ''}`}>
+          {t.popular && <span className="st-tier-tag">最受欢迎</span>}
+          <span className="st-tier-label">{t.label}</span>
+          <span className="st-tier-num">{t.tokens.toLocaleString()}<small> 代币</small></span>
+          {t.bonus && <span className="st-tier-bonus">{t.bonus}</span>}
+          <span className="st-tier-price">¥{t.rmb}</span>
+        </button>
+      ))}
+    </div>
+
+    <Field label="代币能买什么 · What tokens buy" sub="价格随选书定期调整，最终以购买时为准。">
+      <div></div>
+    </Field>
+    <div className="st-uses">
+      {TOKEN_USES.map((u, i) => (
+        <div className="st-use-row" key={i}>
+          <span className="what">{u.what}</span>
+          <span className="cost">{u.cost} <small>代币</small></span>
+        </div>
+      ))}
+    </div>
+
+    <Field label="低余额提醒 · Low-balance alert"
+           sub={`余额低于 ${s.lowThreshold} 代币时通知你。`}>
+      <Toggle on={s.lowAlert} onClick={() => set('lowAlert', !s.lowAlert)} />
+    </Field>
+
+    <Field label="交易记录 · Transaction history" sub="查看充值、消费、退款记录。">
+      <button className="st-btn">查看记录 →</button>
+    </Field>
+  </section>
+);
+
+// ─── ANNOTATIONS ────────────────────────────────────
+const Annotations = ({ s, set }) => (
+  <section className="st-sec" id="annotations">
+    <div className="st-sec-head">
+      <span className="num">三</span>
+      <h2>注解 · Annotations</h2>
+      <span className="meta">six dimensions · 六个视角</span>
+    </div>
+
+    <Field label="默认显示哪些类别 · Visible by default"
+           sub="点击切换。隐藏的类别仍可在阅读时按需展开。">
+      <div className="st-cats">
+        {CATS.map(c => (
+          <div key={c.id}
+            className={`cat ${c.id} ${s.cats[c.id] ? 'on' : 'off'}`}
+            onClick={() => set('cats', { ...s.cats, [c.id]: !s.cats[c.id] })}>
+            <span className="dot"></span>{c.label}
+          </div>
+        ))}
+      </div>
+    </Field>
+
+    <Field label="注解卡片默认展开 · Cards open by default"
+           sub="关闭后，每段进入时只显示卡片标题，点击展开正文。">
+      <Toggle on={s.cardsOpen} onClick={() => set('cardsOpen', !s.cardsOpen)} />
+    </Field>
+  </section>
+);
+
+// ─── DATA ───────────────────────────────────────────
+const Data = () => (
+  <section className="st-sec" id="data">
+    <div className="st-sec-head">
+      <span className="num">四</span>
+      <h2>数据与账户 · Data</h2>
+      <span className="meta">danger zone · 请谨慎操作</span>
+    </div>
+
+    <Field label="清除阅读进度 · Reset reading progress"
+           sub="所有书目的位置标记将回到第一章 · 第一节。书签保留。">
+      <button className="st-btn">清除 →</button>
+    </Field>
+
+    <Field label="注销 · Sign out" sub="保留你的数据。下次登录时一切照旧。">
+      <button className="st-btn">注销账户 →</button>
+    </Field>
+
+    <Field label="永久删除账户 · Delete account"
+           sub="不可恢复。我们会在 30 天内清除你的全部数据。剩余代币不退款。">
+      <button className="st-btn st-btn-danger">删除我的账户 →</button>
+    </Field>
+  </section>
+);
+
+// ─── APP ────────────────────────────────────────────
+const DEFAULT_STATE = {
+  cats: { vocab: true, gram: true, structure: true, lit: true, cult: true, 'style-c': false },
+  cardsOpen: true,
+  lowAlert: true,
+  lowThreshold: 50,
+};
+
+const App = () => {
+  const [state, setState] = React.useState(DEFAULT_STATE);
+  const [dirty, setDirty] = React.useState(false);
+  const set = (k, v) => { setState(s => ({ ...s, [k]: v })); setDirty(true); };
+  const save = () => setDirty(false);
+  const revert = () => { setState(DEFAULT_STATE); setDirty(false); };
+
+  return (
+    <React.Fragment>
+      <nav className="st-nav">
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div className="seal"><span>B社</span></div>
+          <span className="brand-en">BelowIceberg</span>
+        </div>
+        <div className="links">
+          <a>书房</a>
+          <a>书目</a>
+          <a>编辑部</a>
+        </div>
+        <div className="user">
+          <span className="name">{USER.name}</span>
+          <div className="avatar">{USER.initials}</div>
+        </div>
+      </nav>
+
+      <div className="st-page">
+        <div className="st-wrap">
+
+          <aside className="st-toc">
+            <div className="ey">SETTINGS · 目录</div>
+            {SECTIONS.map(sec => (
+              <a key={sec.id} href={`#${sec.id}`}>
+                <span className="num">{sec.num}</span>
+                <span>{sec.zh} · {sec.en}</span>
+              </a>
+            ))}
+          </aside>
+
+          <main className="st-main">
+            <header className="st-header">
+              <span className="st-eyebrow">Settings · 偏好与账户</span>
+              <h1 className="st-h1">设置</h1>
+            </header>
+
+            <Account />
+            <Tokens s={state} set={set} />
+            <Annotations s={state} set={set} />
+            <Data />
+          </main>
+
+        </div>
+      </div>
+
+      <div className={`st-savebar ${dirty ? 'visible' : ''}`}>
+        <span className="msg">未保存的更改</span>
+        <div className="actions">
+          <button className="st-btn" onClick={revert}>放弃</button>
+          <button className="st-cta-gold" onClick={save}>保存更改</button>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]');
+  if (!a) return;
+  const id = a.getAttribute('href').slice(1);
+  const t  = document.getElementById(id);
+  if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+});
+</script>
+</body>
+</html>
