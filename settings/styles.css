@@ -536,3 +536,21 @@ html, body {
   font-size: 10px; color: var(--text3);
   letter-spacing: 0.1em; font-weight: 400; margin-left: 3px;
 }
+
+/* ─── v1 wired controls ────────────────────────────── */
+.st-input { font-family: 'Noto Serif SC','Lora',serif; font-size: 14px; padding: 8px 10px;
+  border: 1px solid rgba(184,148,46,0.25); border-radius: 4px; background: #fff; color: #1a1a15; outline: none; }
+.st-input:focus { border-color: #b8942e; }
+.st-btn { font-family: 'Noto Serif SC',serif; font-size: 13px; padding: 7px 14px;
+  background: #fff; color: #2d2a20; border: 1px solid rgba(184,148,46,0.25);
+  border-radius: 4px; cursor: pointer; }
+.st-btn:hover { background: rgba(184,148,46,0.08); }
+.st-btn-primary { background: #b8942e; color: #fafaf7; border-color: #b8942e; }
+.st-btn-danger { color: #c45a3a; border-color: rgba(196,90,58,0.4); }
+.st-btn-danger:hover { background: rgba(196,90,58,0.08); }
+.st-err { background: rgba(196,90,58,0.08); color: #c45a3a; border-left: 2px solid #c45a3a;
+  padding: 6px 10px; font-size: 12.5px; }
+.st-toggle { display: inline-flex; gap: 8px; align-items: center; font-size: 13px;
+  font-family: 'Noto Serif SC',serif; color: #2d2a20; }
+[data-v1-disabled="true"] { opacity: 0.5; pointer-events: none; }
+[data-v1-disabled="true"]::after { content: " (即将上线)"; font-size: 11px; color: #a89870; }

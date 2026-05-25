@@ -14,11 +14,6 @@
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
 <script type="text/babel">
-const USER = {
-  name: '林清岚', initials: 'L', email: 'qinglan.lin@example.com',
-  joined: '2026 年 3 月', balance: 580,
-};
-
 const SECTIONS = [
   { id: 'account',     num: '一', zh: '账户',     en: 'Account' },
   { id: 'tokens',      num: '二', zh: '代币',     en: 'Tokens' },
@@ -48,23 +43,33 @@ const TOKEN_USES = [
   { what: '编辑部按需注解（一处）',                cost: 10  },
 ];
 
+// ─── HOOKS ──────────────────────────────────────────
+const useMe = () => {
+  const [me, setMe] = React.useState(null);
+  const [loaded, setLoaded] = React.useState(false);
+  React.useEffect(() => {
+    fetch('/api/me', { credentials: 'same-origin' })
+      .then(r => { if (r.status === 401) { location.href = '/login/?next=/settings/'; return null; } return r.json(); })
+      .then(data => { if (data) { setMe(data); setLoaded(true); } });
+  }, []);
+  return { me, setMe, loaded };
+};
+
+const patchMe = async (patch) => {
+  const r = await fetch('/api/me', {
+    method: 'PATCH', credentials: 'same-origin',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(patch),
+  });
+  return r.ok;
+};
+
 // ─── ATOMS ──────────────────────────────────────────
 const Toggle = ({ on, onClick }) => (
   <div className={`st-toggle ${on ? 'on' : ''}`} role="switch" aria-checked={on} onClick={onClick}></div>
 );
-const Segmented = ({ value, options, onChange }) => (
-  <div className="st-seg" role="radiogroup">
-    {options.map(o => (
-      <div key={o.id}
-        className={`opt ${value === o.id ? 'active' : ''}`}
-        role="radio" aria-checked={value === o.id}
-        onClick={() => onChange(o.id)}
-      >{o.label}</div>
-    ))}
-  </div>
-);
-const Field = ({ label, sub, children }) => (
-  <div className="st-field">
+const Field = ({ label, sub, children, disabled }) => (
+  <div className="st-field" {...(disabled ? {'data-v1-disabled': 'true'} : {})}>
     <div className="label">
       <span className="k">{label}</span>
       {sub && <span className="sub">{sub}</span>}
@@ -73,56 +78,99 @@ const Field = ({ label, sub, children }) => (
   </div>
 );
 
+const initialsOf = (name) => (name || '?').trim().slice(0, 1).toUpperCase();
+const joinedOf = (me) => {
+  if (!me || !me.created_at) return '';
+  try {
+    const d = new Date(me.created_at);
+    return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月`;
+  } catch (e) { return ''; }
+};
+
 // ─── ACCOUNT ────────────────────────────────────────
-const Account = () => (
-  <section className="st-sec" id="account">
-    <div className="st-sec-head">
-      <span className="num">一</span>
-      <h2>账户 · Account</h2>
-      <span className="meta">verified · 已验证</span>
-    </div>
+const Account = ({ me, setMe }) => {
+  const [pwOpen, setPwOpen] = React.useState(false);
+  const [pwCur, setPwCur] = React.useState('');
+  const [pwNew, setPwNew] = React.useState('');
+  const [pwErr, setPwErr] = React.useState('');
+  const submitPw = async (e) => {
+    e.preventDefault(); setPwErr('');
+    const r = await fetch('/api/me/change-password', {
+      method: 'POST', credentials: 'same-origin',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({current: pwCur, new: pwNew}),
+    });
+    if (r.ok) { setPwOpen(false); setPwCur(''); setPwNew(''); alert('密码已更新'); }
+    else { const j = await r.json().catch(()=>({})); setPwErr(j.detail || '失败'); }
+  };
 
-    <div className="st-account-card">
-      <div className="av">
-        {USER.initials}
-        <div className="edit" title="更换头像">✎</div>
+  return (
+    <section className="st-sec" id="account">
+      <div className="st-sec-head">
+        <span className="num">一</span>
+        <h2>账户 · Account</h2>
+        <span className="meta">verified · 已验证</span>
       </div>
-      <div className="right">
-        <span className="name">{USER.name}</span>
-        <span className="email">{USER.email}</span>
-        <span className="meta">加入于 {USER.joined}</span>
+
+      <div className="st-account-card">
+        <div className="av">
+          {initialsOf(me.display_name)}
+          <div className="edit" title="更换头像" data-v1-disabled="true">✎</div>
+        </div>
+        <div className="right">
+          <span className="name">{me.display_name}</span>
+          <span className="email">{me.email}</span>
+          {joinedOf(me) && <span className="meta">加入于 {joinedOf(me)}</span>}
+        </div>
       </div>
-    </div>
 
-    <Field label="姓名 · Display name" sub="出现在注解评论与你的书房页面。">
-      <input className="st-input" defaultValue={USER.name} />
-    </Field>
+      <Field label="姓名 · Display name" sub="出现在注解评论与你的书房页面。">
+        <input className="st-input" defaultValue={me.display_name}
+          onBlur={async (e) => {
+            const v = e.target.value.trim();
+            if (v && v !== me.display_name) {
+              if (await patchMe({display_name: v})) setMe({...me, display_name: v});
+            }
+          }} />
+      </Field>
 
-    <Field label="邮箱 · Email" sub="用于登录与编辑部信件投递。">
-      <span className="st-value">
-        {USER.email} <a className="editlink">更换 →</a>
-      </span>
-    </Field>
-  </section>
-);
+      <Field label="邮箱 · Email" sub="用于登录与编辑部信件投递。" disabled>
+        <span className="st-value">
+          {me.email} <a className="editlink">更换 →</a>
+        </span>
+      </Field>
 
-// ─── TOKENS ─────────────────────────────────────────
-const Tokens = ({ s, set }) => (
-  <section className="st-sec" id="tokens">
+      <Field label="密码 · Password" sub="建议至少 8 位。">
+        <button className="st-btn" onClick={() => setPwOpen(!pwOpen)}>修改密码</button>
+        {pwOpen && (
+          <form onSubmit={submitPw} style={{display:'flex',flexDirection:'column',gap:8,marginTop:8,maxWidth:320}}>
+            <input type="password" placeholder="当前密码" value={pwCur} onChange={e=>setPwCur(e.target.value)} required className="st-input"/>
+            <input type="password" placeholder="新密码 (8+ 字符)" value={pwNew} onChange={e=>setPwNew(e.target.value)} required minLength={8} className="st-input"/>
+            {pwErr && <div className="st-err">{pwErr}</div>}
+            <button type="submit" className="st-btn st-btn-primary">确认</button>
+          </form>
+        )}
+      </Field>
+    </section>
+  );
+};
+
+// ─── TOKENS (visual-only, disabled) ─────────────────
+const Tokens = ({ me }) => (
+  <section className="st-sec" id="tokens" data-v1-disabled="true">
     <div className="st-sec-head">
       <span className="num">二</span>
       <h2>代币 · Tokens</h2>
       <span className="meta">books · exports · annotations</span>
     </div>
 
-    {/* Balance hero */}
     <div className="st-token-balance">
       <div className="left">
         <span className="ey">YOUR BALANCE · 余额</span>
-        <span className="num">{USER.balance.toLocaleString()}<small> 代币</small></span>
+        <span className="num">{(me.balance || 0).toLocaleString()}<small> 代币</small></span>
         <span className="sub">够再买 1 部教学版 + 2 次 EPUB 导出</span>
       </div>
-      <button className="st-cta-gold">充值 →</button>
+      <button className="st-cta-gold" disabled>充值 →</button>
     </div>
 
     <Field label="充值套餐 · Recharge" sub="代币不会过期。在 B社 内可用于购买教学版、单章试读、EPUB 导出、按需注解。">
@@ -131,7 +179,7 @@ const Tokens = ({ s, set }) => (
 
     <div className="st-tiers">
       {RECHARGE_TIERS.map(t => (
-        <button key={t.tokens} className={`st-tier ${t.popular ? 'popular' : ''}`}>
+        <button key={t.tokens} className={`st-tier ${t.popular ? 'popular' : ''}`} disabled>
           {t.popular && <span className="st-tier-tag">最受欢迎</span>}
           <span className="st-tier-label">{t.label}</span>
           <span className="st-tier-num">{t.tokens.toLocaleString()}<small> 代币</small></span>
@@ -153,19 +201,14 @@ const Tokens = ({ s, set }) => (
       ))}
     </div>
 
-    <Field label="低余额提醒 · Low-balance alert"
-           sub={`余额低于 ${s.lowThreshold} 代币时通知你。`}>
-      <Toggle on={s.lowAlert} onClick={() => set('lowAlert', !s.lowAlert)} />
-    </Field>
-
     <Field label="交易记录 · Transaction history" sub="查看充值、消费、退款记录。">
-      <button className="st-btn">查看记录 →</button>
+      <button className="st-btn" disabled>查看记录 →</button>
     </Field>
   </section>
 );
 
 // ─── ANNOTATIONS ────────────────────────────────────
-const Annotations = ({ s, set }) => (
+const Annotations = ({ me, setMe }) => (
   <section className="st-sec" id="annotations">
     <div className="st-sec-head">
       <span className="num">三</span>
@@ -174,12 +217,10 @@ const Annotations = ({ s, set }) => (
     </div>
 
     <Field label="默认显示哪些类别 · Visible by default"
-           sub="点击切换。隐藏的类别仍可在阅读时按需展开。">
+           sub="点击切换。隐藏的类别仍可在阅读时按需展开。" disabled>
       <div className="st-cats">
         {CATS.map(c => (
-          <div key={c.id}
-            className={`cat ${c.id} ${s.cats[c.id] ? 'on' : 'off'}`}
-            onClick={() => set('cats', { ...s.cats, [c.id]: !s.cats[c.id] })}>
+          <div key={c.id} className={`cat ${c.id} on`}>
             <span className="dot"></span>{c.label}
           </div>
         ))}
@@ -188,7 +229,14 @@ const Annotations = ({ s, set }) => (
 
     <Field label="注解卡片默认展开 · Cards open by default"
            sub="关闭后，每段进入时只显示卡片标题，点击展开正文。">
-      <Toggle on={s.cardsOpen} onClick={() => set('cardsOpen', !s.cardsOpen)} />
+      <label className="st-toggle">
+        <input type="checkbox" checked={!!me.cards_open_default}
+          onChange={async (e) => {
+            const v = e.target.checked;
+            if (await patchMe({cards_open_default: v})) setMe({...me, cards_open_default: v});
+          }} />
+        <span>注解卡片默认展开</span>
+      </label>
     </Field>
   </section>
 );
@@ -204,90 +252,80 @@ const Data = () => (
 
     <Field label="清除阅读进度 · Reset reading progress"
            sub="所有书目的位置标记将回到第一章 · 第一节。书签保留。">
-      <button className="st-btn">清除 →</button>
+      <button className="st-btn st-btn-danger" onClick={async () => {
+        if (!confirm('确认清除所有阅读进度？此操作不可撤销。')) return;
+        const r = await fetch('/api/me/clear-progress', { method:'POST', credentials:'same-origin' });
+        if (r.ok) alert('阅读进度已清除'); else alert('失败');
+      }}>清除阅读进度</button>
     </Field>
 
     <Field label="注销 · Sign out" sub="保留你的数据。下次登录时一切照旧。">
-      <button className="st-btn">注销账户 →</button>
+      <button className="st-btn" onClick={async () => {
+        await fetch('/api/auth/logout', { method:'POST', credentials:'same-origin' });
+        location.href = '/';
+      }}>退出登录</button>
     </Field>
 
     <Field label="永久删除账户 · Delete account"
-           sub="不可恢复。我们会在 30 天内清除你的全部数据。剩余代币不退款。">
-      <button className="st-btn st-btn-danger">删除我的账户 →</button>
+           sub="不可恢复。我们会在 30 天内清除你的全部数据。剩余代币不退款。" disabled>
+      <button className="st-btn st-btn-danger" disabled>删除我的账户 →</button>
     </Field>
   </section>
 );
 
 // ─── APP ────────────────────────────────────────────
-const DEFAULT_STATE = {
-  cats: { vocab: true, gram: true, structure: true, lit: true, cult: true, 'style-c': false },
-  cardsOpen: true,
-  lowAlert: true,
-  lowThreshold: 50,
-};
+const Page = ({ me, setMe }) => (
+  <React.Fragment>
+    <nav className="st-nav">
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="seal"><span>B社</span></div>
+        <span className="brand-en">BelowIceberg</span>
+      </div>
+      <div className="links">
+        <a href="/library/">书房</a>
+        <a href="/library/">书目</a>
+        <a>编辑部</a>
+      </div>
+      <div className="user">
+        <span className="name">{me.display_name}</span>
+        <div className="avatar">{initialsOf(me.display_name)}</div>
+      </div>
+    </nav>
+
+    <div className="st-page">
+      <div className="st-wrap">
+
+        <aside className="st-toc">
+          <div className="ey">SETTINGS · 目录</div>
+          {SECTIONS.map(sec => (
+            <a key={sec.id} href={`#${sec.id}`}>
+              <span className="num">{sec.num}</span>
+              <span>{sec.zh} · {sec.en}</span>
+            </a>
+          ))}
+        </aside>
+
+        <main className="st-main">
+          <header className="st-header">
+            <span className="st-eyebrow">Settings · 偏好与账户</span>
+            <h1 className="st-h1">设置</h1>
+          </header>
+
+          <Account me={me} setMe={setMe} />
+          <Tokens me={me} />
+          <Annotations me={me} setMe={setMe} />
+          <Data />
+        </main>
+
+      </div>
+    </div>
+  </React.Fragment>
+);
 
 const App = () => {
-  const [state, setState] = React.useState(DEFAULT_STATE);
-  const [dirty, setDirty] = React.useState(false);
-  const set = (k, v) => { setState(s => ({ ...s, [k]: v })); setDirty(true); };
-  const save = () => setDirty(false);
-  const revert = () => { setState(DEFAULT_STATE); setDirty(false); };
-
-  return (
-    <React.Fragment>
-      <nav className="st-nav">
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <div className="seal"><span>B社</span></div>
-          <span className="brand-en">BelowIceberg</span>
-        </div>
-        <div className="links">
-          <a>书房</a>
-          <a>书目</a>
-          <a>编辑部</a>
-        </div>
-        <div className="user">
-          <span className="name">{USER.name}</span>
-          <div className="avatar">{USER.initials}</div>
-        </div>
-      </nav>
-
-      <div className="st-page">
-        <div className="st-wrap">
-
-          <aside className="st-toc">
-            <div className="ey">SETTINGS · 目录</div>
-            {SECTIONS.map(sec => (
-              <a key={sec.id} href={`#${sec.id}`}>
-                <span className="num">{sec.num}</span>
-                <span>{sec.zh} · {sec.en}</span>
-              </a>
-            ))}
-          </aside>
-
-          <main className="st-main">
-            <header className="st-header">
-              <span className="st-eyebrow">Settings · 偏好与账户</span>
-              <h1 className="st-h1">设置</h1>
-            </header>
-
-            <Account />
-            <Tokens s={state} set={set} />
-            <Annotations s={state} set={set} />
-            <Data />
-          </main>
-
-        </div>
-      </div>
-
-      <div className={`st-savebar ${dirty ? 'visible' : ''}`}>
-        <span className="msg">未保存的更改</span>
-        <div className="actions">
-          <button className="st-btn" onClick={revert}>放弃</button>
-          <button className="st-cta-gold" onClick={save}>保存更改</button>
-        </div>
-      </div>
-    </React.Fragment>
-  );
+  const { me, setMe, loaded } = useMe();
+  if (!loaded || !me) return <div style={{padding:'60px',textAlign:'center',fontFamily:"'Noto Serif SC',serif",color:'#6a6353'}}>加载中…</div>;
+  return <Page me={me} setMe={setMe} />;
 };
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
