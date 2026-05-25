@@ -20,3 +20,18 @@ def test_validate_session_rejects_tampered(env):
 def test_validate_session_rejects_empty(env):
     assert validate_session("") is False
     assert validate_session(None) is False
+
+from app.auth import issue_user_session, validate_user_session
+
+def test_user_session_roundtrip(env):
+    token = issue_user_session(user_id=42)
+    assert validate_user_session(token) == 42
+
+def test_user_session_rejects_tampered(env):
+    token = issue_user_session(user_id=42)
+    bad = token[:-2] + ("aa" if not token.endswith("aa") else "bb")
+    assert validate_user_session(bad) is None
+
+def test_user_session_rejects_empty(env):
+    assert validate_user_session("") is None
+    assert validate_user_session(None) is None
