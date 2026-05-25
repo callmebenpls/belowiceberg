@@ -4,36 +4,20 @@ from app.main import create_app
 from app.auth import SESSION_COOKIE
 
 @pytest.fixture
-def client(env):
+def client(env, db):
     return TestClient(create_app())
 
-def test_login_wrong_password(client):
-    r = client.post("/admin/login", json={"password": "wrong"})
-    assert r.status_code == 401
-
-def test_login_correct_sets_cookie(client):
-    r = client.post("/admin/login", json={"password": "test"})
-    assert r.status_code == 200
-    assert SESSION_COOKIE in r.cookies
-
-def test_admin_status_requires_session(client):
-    assert client.get("/admin").status_code == 401
-
-def test_admin_status_with_session(client):
-    client.post("/admin/login", json={"password": "test"})
-    r = client.get("/admin")
-    assert r.status_code == 200
-    assert r.json() == {"role": "admin"}
-
-def test_logout_clears_cookie(client):
-    client.post("/admin/login", json={"password": "test"})
-    r = client.post("/admin/logout")
-    assert r.status_code == 200
-    # subsequent admin call should fail
-    assert client.get("/admin").status_code == 401
+def _signup(client, email="admin@b.com", admin_via_db=False):
+    """Sign up via the new auth route. If admin_via_db, flip is_admin in DB."""
+    client.post("/api/auth/signup", json={"email": email, "password": "secret123", "display_name": "T"})
+    if admin_via_db:
+        from app.db import get_conn
+        conn = get_conn()
+        conn.execute("UPDATE users SET is_admin = 1 WHERE email = ?", (email,))
+        conn.commit()
 
 def _login(client):
-    client.post("/admin/login", json={"password": "test"})
+    _signup(client, admin_via_db=True)
 
 def test_get_notes_is_public(client):
     r = client.get("/api/notes/gatsby")

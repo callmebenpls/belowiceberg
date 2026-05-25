@@ -2,7 +2,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
-from app.auth import require_admin
+from app.auth import require_user
 from app.deepseek import stream_analysis, DeepSeekError
 
 router = APIRouter()
@@ -23,5 +23,5 @@ async def _sse(body: QueryBody):
         yield f"event: error\ndata: {str(e)[:200]}\n\n"
 
 @router.post("/api/query")
-async def query(body: QueryBody, _: None = Depends(require_admin)):
+async def query(body: QueryBody, _: dict = Depends(require_user)):
     return StreamingResponse(_sse(body), media_type="text/event-stream")

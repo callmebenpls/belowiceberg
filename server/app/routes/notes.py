@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status as http_status
 from pydantic import BaseModel, Field
-from app.auth import require_admin
+from app.auth import require_admin_user
 from app.notes import read_notes, append_note, Note, NoteValidationError
 
 router = APIRouter()
@@ -19,7 +19,7 @@ def get_notes(slug: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.post("/api/notes/{slug}", status_code=http_status.HTTP_201_CREATED)
-def post_note(slug: str, body: NoteIn, _: None = Depends(require_admin)):
+def post_note(slug: str, body: NoteIn, _: dict = Depends(require_admin_user)):
     note = Note(**body.model_dump())
     try:
         append_note(slug, note)
