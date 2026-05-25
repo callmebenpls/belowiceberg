@@ -120,6 +120,53 @@ body {
 }
 .nav-cta:hover { opacity: 0.85; }
 
+/* Login state (added Ship 1) */
+.nav-login {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.82rem;
+  color: var(--text2);
+  text-decoration: none;
+  padding: 0.35rem 0.9rem;
+  border-radius: 4px;
+  border: 0.5px solid var(--border);
+  transition: color 0.18s, border-color 0.18s;
+}
+.nav-login:hover { color: var(--gold); border-color: var(--gold); }
+
+.nav-shelf {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.82rem;
+  color: var(--text2);
+  text-decoration: none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  transition: color 0.18s, background 0.18s;
+}
+.nav-shelf:hover { color: var(--gold); background: var(--gold-pale); }
+
+.nav-user-chip {
+  display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.2rem 0.7rem 0.2rem 0.3rem;
+  border: 0.5px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  cursor: pointer; text-decoration: none;
+  transition: border-color 0.18s;
+}
+.nav-user-chip:hover { border-color: var(--gold); }
+.nav-user-chip .av {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--gold); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.72rem; font-weight: 700;
+}
+.nav-user-chip .uname {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 0.78rem; color: var(--text2);
+}
+.nav-user-chip .caret { font-size: 0.6rem; color: var(--text3); }
+
 /* ══ HERO ════════════════════════════════════════════════════════════════ */
 .hero {
   min-height: 100vh;
@@ -746,7 +793,16 @@ body {
     <li><a href="#sample">试读</a></li>
     <li><a href="#about">关于B社</a></li>
   </ul>
-  <a href="#books" class="nav-cta">开始阅读</a>
+  <!-- Guest state (visible by default; hidden when logged in) -->
+  <a href="/login/?next=/" class="nav-login" id="nav-guest-login" hidden>登录</a>
+  <a href="#books" class="nav-cta" id="nav-guest-cta" hidden>开始阅读</a>
+  <!-- Logged-in state (hidden by default; shown when /api/me succeeds) -->
+  <a href="/library/" class="nav-shelf" id="nav-user-shelf" hidden>我的书房</a>
+  <a href="/settings/" class="nav-user-chip" id="nav-user-chip" hidden>
+    <div class="av" id="nav-user-av">B</div>
+    <span class="uname" id="nav-user-name">读者</span>
+    <span class="caret">▾</span>
+  </a>
 </nav>
 
 <!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
@@ -1147,6 +1203,28 @@ body {
     </div>
   </div>
 </footer>
+
+<script>
+(async () => {
+  try {
+    const r = await fetch('/api/me', { credentials: 'same-origin' });
+    if (r.ok) {
+      const u = await r.json();
+      document.getElementById('nav-user-shelf').hidden = false;
+      const chip = document.getElementById('nav-user-chip');
+      chip.hidden = false;
+      const name = u.display_name || u.email || '读者';
+      document.getElementById('nav-user-name').textContent = name;
+      const initial = (name.charCodeAt(0) < 128 ? name[0] : 'B').toUpperCase();
+      document.getElementById('nav-user-av').textContent = initial;
+      return;
+    }
+  } catch (_) { /* network error → fall through to guest */ }
+  // Guest fallback
+  document.getElementById('nav-guest-login').hidden = false;
+  document.getElementById('nav-guest-cta').hidden = false;
+})();
+</script>
 
 <script>
 // Smooth scroll
