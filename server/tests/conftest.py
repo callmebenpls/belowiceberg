@@ -18,3 +18,13 @@ def env(monkeypatch, tmp_data_dir):
     monkeypatch.setenv("SESSION_SECRET", "test-secret-do-not-use-in-prod")
     monkeypatch.setenv("DEEPSEEK_API_KEY", "sk-test")
     return tmp_data_dir
+
+@pytest.fixture
+def db(env, monkeypatch):
+    """Fresh in-file SQLite per test, with migrations applied."""
+    from app.db import migrate, get_conn, reset_conn
+    reset_conn()  # clear any cached connection
+    # `env` fixture already set BELOWICEBERG_DATA_DIR to tmp_path
+    migrate()
+    yield get_conn()
+    reset_conn()
