@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B社 · 你的书房 · Library</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<nav class="lib-nav">
+  <a href="/" class="lib-brand">
+    <div class="seal"><span>B社</span></div>
+    <span class="brand-en">BelowIceberg</span>
+  </a>
+  <ul class="lib-nav-links">
+    <li><a href="/library" class="active">书房</a></li>
+    <li><a href="/">书目</a></li>
+    <li><a href="/settings">设置</a></li>
+  </ul>
+  <a href="#" id="lib-logout" class="lib-nav-cta">退出</a>
+</nav>
+
+<main class="lib-page">
+  <div id="lib-loading" style="text-align:center;padding:80px 20px;color:#7a7466">加载中…</div>
+  <div id="lib-root" hidden></div>
+</main>
+
+<script>
+(async () => {
+  const r = await fetch('/api/library', { credentials: 'same-origin' });
+  if (r.status === 401) { location.href = '/login/?next=/library/'; return; }
+  if (!r.ok) { document.getElementById('lib-loading').textContent = '加载失败'; return; }
+  const data = await r.json();
+  document.getElementById('lib-loading').remove();
+  const root = document.getElementById('lib-root');
+  root.hidden = false;
+
+  // Continue reading
+  const cur = data.current;
+  const continueHtml = cur
+    ? `<section class="lib-continue">
+         <div class="lib-eyebrow">CONTINUE · 继续阅读</div>
+         <h2 class="lib-cur-title">${escapeHtml(cur.book_slug.replace('gatsby','The Great Gatsby'))}</h2>
+         <p class="lib-cur-pos">第 ${cur.chapter} 章 · 第 ${cur.section} 节</p>
+         <a class="lib-cta" href="/${cur.book_slug}#ch${cur.chapter}s${cur.section}">继续阅读 →</a>
+       </section>`
+    : `<section class="lib-continue lib-empty">
+         <p>你还没有开始阅读。<a href="/gatsby">从《了不起的盖茨比》开始 →</a></p>
+       </section>`;
+
+  // Stats
+  const s = data.stats;
+  const statsHtml = `
+    <section class="lib-stats">
+      <div><span class="num">${s.sessions}</span><span class="lbl">阅读天数</span></div>
+      <div><span class="num">${s.streak_days}</span><span class="lbl">连续阅读</span></div>
+      <div><span class="num">${data.all_my_notes.length}</span><span class="lbl">我的注解</span></div>
+    </section>`;
+
+  // Notes
+  const byBook = {};
+  for (const n of data.all_my_notes) (byBook[n.book_slug] ||= []).push(n);
+  const notesHtml = Object.keys(byBook).length === 0
+    ? `<section class="lib-notes lib-empty"><p>暂无注解。在书中选中文字后调用 AI 即可保存。</p></section>`
+    : `<section class="lib-notes">
+         <div class="lib-eyebrow">MY NOTES · 我的注解</div>
+         ${Object.entries(byBook).map(([slug, list]) => `
+           <h3 class="lib-notes-book">${escapeHtml(slug)}</h3>
+           <ul class="lib-notes-list">
+             ${list.map(n => `
+               <li class="lib-note lib-note-${n.category}">
+                 <span class="lib-note-cat">${({vocab:'词汇',grammar:'语法',structure:'句子结构'})[n.category]}</span>
+                 <span class="lib-note-term">${escapeHtml(n.selectedText)}</span>
+                 <div class="lib-note-body">${escapeHtml(n.responseMarkdown).slice(0,240)}${n.responseMarkdown.length > 240 ? '…' : ''}</div>
+                 <a class="lib-note-src" href="/${slug}#${n.paraId}">跳转到原文 →</a>
+               </li>`).join('')}
+           </ul>`).join('')}
+       </section>`;
+
+  root.innerHTML = continueHtml + statsHtml + notesHtml;
+
+  document.getElementById('lib-logout').onclick = async (e) => {
+    e.preventDefault();
+    await fetch('/api/auth/logout', { method:'POST', credentials:'same-origin' });
+    location.href = '/';
+  };
+})();
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+</script>
+</body>
+</html>
