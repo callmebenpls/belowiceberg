@@ -1,92 +1,210 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>B社 · 你的书房 · Library</title>
+<title>我的书房 · BelowIceberg · B社</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<nav class="lib-nav">
-  <a href="/" class="lib-brand">
-    <div class="seal"><span>B社</span></div>
-    <span class="brand-en">BelowIceberg</span>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <div class="nav-seal"><span>B社</span></div>
+    <div class="nav-brand">
+      <span class="nav-brand-en">BelowIceberg</span>
+      <span class="nav-brand-zh">B社</span>
+    </div>
   </a>
-  <ul class="lib-nav-links">
-    <li><a href="/library" class="active">书房</a></li>
-    <li><a href="/">书目</a></li>
-    <li><a href="/settings">设置</a></li>
+  <ul class="nav-links">
+    <li><a href="/#method">方法论</a></li>
+    <li><a href="/books/">书目</a></li>
+    <li><a href="/library/" class="active">我的书房</a></li>
+    <li><a href="/#about">关于B社</a></li>
   </ul>
-  <a href="#" id="lib-logout" class="lib-nav-cta">退出</a>
+  <a href="/settings/" class="nav-user-chip" id="nav-user-chip" hidden>
+    <div class="av" id="nav-user-av">B</div>
+    <span class="uname" id="nav-user-name">读者</span>
+    <span class="caret">▾</span>
+  </a>
 </nav>
 
-<main class="lib-page">
-  <div id="lib-loading" style="text-align:center;padding:80px 20px;color:#7a7466">加载中…</div>
-  <div id="lib-root" hidden></div>
+<main class="lib">
+  <div id="lib-loading" class="lib-loading">加载中…</div>
+  <div id="lib-root" hidden>
+    <div class="lib-tabs">
+      <div class="lib-tab active" data-tab="reading">正在阅读<span class="count" id="cnt-reading">0</span></div>
+      <div class="lib-tab" data-tab="want">想读<span class="count" id="cnt-want">0</span></div>
+      <div class="lib-tab" data-tab="done">已读完<span class="count" id="cnt-done">0</span></div>
+    </div>
+
+    <!-- Reading tab -->
+    <div class="lib-tab-panel" data-panel="reading">
+      <div class="lib-section-header">
+        <span class="lib-eyebrow">CURRENTLY READING · 正在阅读</span>
+      </div>
+      <div id="reading-grid" class="lib-grid"></div>
+      <div id="reading-empty" class="lib-empty" hidden>
+        <p>你还没有开始阅读。</p>
+        <p style="margin-top:0.5rem"><a href="/gatsby">从《了不起的盖茨比》开始 →</a></p>
+      </div>
+    </div>
+
+    <!-- Want-to-read tab -->
+    <div class="lib-tab-panel" data-panel="want" hidden>
+      <div class="lib-section-header">
+        <div><span class="lib-eyebrow">WANT TO READ · 想读</span><span class="lib-section-title">B社系列下一批书目</span></div>
+        <span class="lib-section-count" id="want-count-label">3 部即将上架</span>
+      </div>
+      <div id="want-grid" class="lib-grid"></div>
+    </div>
+
+    <!-- Done tab -->
+    <div class="lib-tab-panel" data-panel="done" hidden>
+      <div class="lib-section-header">
+        <span class="lib-eyebrow">FINISHED · 已读完</span>
+      </div>
+      <div class="lib-empty">
+        <p>你还没有完成任何书目。</p>
+      </div>
+    </div>
+  </div>
 </main>
 
 <script>
+// Book metadata — slug → display info + cover class. Mirrors the homepage 现有书目 data.
+const BOOK_META = {
+  'gatsby': {
+    title_en: 'The Great Gatsby',
+    title_zh: '了不起的盖茨比',
+    author: 'F. Scott Fitzgerald',
+    cover_class: 'bc-gatsby',
+    gradient: 'linear-gradient(155deg,#f0e8d5,#e2d8c0)',
+    chapters: 9
+  }
+};
+
+// Want-to-read — hardcoded for Plan A (Task 7 decision). Plan B replaces with /api/books?status=draft.
+const WANT_TO_READ = [
+  { title_en: 'O. Henry Short Stories', title_zh: '欧·亨利短篇精选', author: 'O. Henry',
+    gradient: 'linear-gradient(155deg,#f5f0e8,#ede6d6)' },
+  { title_en: 'The Sun Also Rises', title_zh: '太阳照常升起', author: 'Ernest Hemingway',
+    gradient: 'linear-gradient(155deg,#f5e8d8,#eddcc8)' },
+  { title_en: 'The Maltese Falcon', title_zh: '马耳他之鹰', author: 'Dashiell Hammett',
+    gradient: 'linear-gradient(155deg,#e0eee8,#d0e2da)' }
+];
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+function meta(slug) {
+  return BOOK_META[slug] || { title_en: slug, title_zh: slug, author: '', gradient: 'linear-gradient(155deg,#e8e4d8,#d4cdb4)', chapters: 1 };
+}
+
+function readingCardHtml(book) {
+  const m = meta(book.book_slug);
+  const totalSections = m.chapters * 10; // rough estimate; replaced when real chapter metadata lands
+  const doneSections = Math.max(1, (book.chapter - 1) * 10 + book.section);
+  const pct = Math.min(100, Math.round(100 * doneSections / Math.max(1, totalSections)));
+  return `
+    <a class="lib-card" href="/${escapeHtml(book.book_slug)}#ch${book.chapter}s${book.section}">
+      <div class="lib-cover" style="background:${m.gradient}">
+        <div class="lib-cover-inner">
+          <div class="ct">${escapeHtml(m.title_en)}</div>
+          <div class="cz">${escapeHtml(m.title_zh)}</div>
+        </div>
+        <div class="lib-progress">
+          <div class="pos">第 ${book.chapter} 章 · 第 ${book.section} 节</div>
+          <div class="lib-bar"><div class="lib-bar-fill" style="width:${pct}%"></div></div>
+          <div class="lib-row"><span>Ch.${book.chapter} · ${book.section}/10</span><span>${pct}%</span></div>
+        </div>
+      </div>
+      <div class="lib-meta">
+        <div class="mt">${escapeHtml(m.title_en)}</div>
+        <div class="ms">${escapeHtml(m.title_zh)} · ${escapeHtml(m.author)}</div>
+      </div>
+    </a>`;
+}
+
+function wantCardHtml(b) {
+  return `
+    <div class="lib-card">
+      <div class="lib-cover" style="background:${b.gradient}">
+        <div class="lib-cover-inner">
+          <div class="ct">${escapeHtml(b.title_en)}</div>
+          <div class="cz">${escapeHtml(b.title_zh)}</div>
+        </div>
+        <div class="lib-soon-badge">即将上架</div>
+      </div>
+      <div class="lib-meta">
+        <div class="mt">${escapeHtml(b.title_en)}</div>
+        <div class="ms">${escapeHtml(b.title_zh)} · ${escapeHtml(b.author)}</div>
+      </div>
+    </div>`;
+}
+
+function renderReading(books) {
+  const grid = document.getElementById('reading-grid');
+  const empty = document.getElementById('reading-empty');
+  document.getElementById('cnt-reading').textContent = books.length;
+  if (books.length === 0) { grid.innerHTML = ''; empty.hidden = false; return; }
+  empty.hidden = true;
+  grid.innerHTML = books.map(readingCardHtml).join('');
+}
+
+function renderWant(items) {
+  document.getElementById('cnt-want').textContent = items.length;
+  document.getElementById('want-count-label').textContent = `${items.length} 部即将上架`;
+  document.getElementById('want-grid').innerHTML = items.map(wantCardHtml).join('');
+}
+
+function setUserChip(u) {
+  const chip = document.getElementById('nav-user-chip');
+  chip.hidden = false;
+  const name = u.display_name || u.email || '读者';
+  document.getElementById('nav-user-name').textContent = name;
+  const initial = (name.charCodeAt(0) < 128 ? name[0] : 'B').toUpperCase();
+  document.getElementById('nav-user-av').textContent = initial;
+}
+
+function wireTabs() {
+  const tabs = document.querySelectorAll('.lib-tab');
+  const panels = document.querySelectorAll('.lib-tab-panel');
+  tabs.forEach(t => {
+    t.addEventListener('click', () => {
+      tabs.forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      const which = t.dataset.tab;
+      panels.forEach(p => { p.hidden = p.dataset.panel !== which; });
+    });
+  });
+}
+
 (async () => {
+  // Fetch library data; redirect to login if not authed
   const r = await fetch('/api/library', { credentials: 'same-origin' });
   if (r.status === 401) { location.href = '/login/?next=/library/'; return; }
-  if (!r.ok) { document.getElementById('lib-loading').textContent = '加载失败'; return; }
+  if (!r.ok) {
+    document.getElementById('lib-loading').textContent = '加载失败，请刷新';
+    return;
+  }
   const data = await r.json();
+
+  // Also fetch /api/me for the nav chip (we already know user is logged in)
+  try {
+    const me = await fetch('/api/me', { credentials: 'same-origin' });
+    if (me.ok) setUserChip(await me.json());
+  } catch (_) {}
+
   document.getElementById('lib-loading').remove();
-  const root = document.getElementById('lib-root');
-  root.hidden = false;
+  document.getElementById('lib-root').hidden = false;
 
-  // Continue reading
-  const cur = data.current;
-  const continueHtml = cur
-    ? `<section class="lib-continue">
-         <div class="lib-eyebrow">CONTINUE · 继续阅读</div>
-         <h2 class="lib-cur-title">${escapeHtml(cur.book_slug.replace('gatsby','The Great Gatsby'))}</h2>
-         <p class="lib-cur-pos">第 ${cur.chapter} 章 · 第 ${cur.section} 节</p>
-         <a class="lib-cta" href="/${cur.book_slug}#ch${cur.chapter}s${cur.section}">继续阅读 →</a>
-       </section>`
-    : `<section class="lib-continue lib-empty">
-         <p>你还没有开始阅读。<a href="/gatsby">从《了不起的盖茨比》开始 →</a></p>
-       </section>`;
-
-  // Stats
-  const s = data.stats;
-  const statsHtml = `
-    <section class="lib-stats">
-      <div><span class="num">${s.sessions}</span><span class="lbl">阅读天数</span></div>
-      <div><span class="num">${s.streak_days}</span><span class="lbl">连续阅读</span></div>
-      <div><span class="num">${data.all_my_notes.length}</span><span class="lbl">我的注解</span></div>
-    </section>`;
-
-  // Notes
-  const byBook = {};
-  for (const n of data.all_my_notes) (byBook[n.book_slug] ||= []).push(n);
-  const notesHtml = Object.keys(byBook).length === 0
-    ? `<section class="lib-notes lib-empty"><p>暂无注解。在书中选中文字后调用 AI 即可保存。</p></section>`
-    : `<section class="lib-notes">
-         <div class="lib-eyebrow">MY NOTES · 我的注解</div>
-         ${Object.entries(byBook).map(([slug, list]) => `
-           <h3 class="lib-notes-book">${escapeHtml(slug)}</h3>
-           <ul class="lib-notes-list">
-             ${list.map(n => `
-               <li class="lib-note lib-note-${n.category}">
-                 <span class="lib-note-cat">${({vocab:'词汇',grammar:'语法',structure:'句子结构'})[n.category]}</span>
-                 <span class="lib-note-term">${escapeHtml(n.selectedText)}</span>
-                 <div class="lib-note-body">${escapeHtml(n.responseMarkdown).slice(0,240)}${n.responseMarkdown.length > 240 ? '…' : ''}</div>
-                 <a class="lib-note-src" href="/${slug}#${n.paraId}">跳转到原文 →</a>
-               </li>`).join('')}
-           </ul>`).join('')}
-       </section>`;
-
-  root.innerHTML = continueHtml + statsHtml + notesHtml;
-
-  document.getElementById('lib-logout').onclick = async (e) => {
-    e.preventDefault();
-    await fetch('/api/auth/logout', { method:'POST', credentials:'same-origin' });
-    location.href = '/';
-  };
+  renderReading(data.books_in_progress || []);
+  renderWant(WANT_TO_READ);
+  wireTabs();
 })();
-
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 </script>
 </body>
 </html>
