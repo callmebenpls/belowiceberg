@@ -316,3 +316,31 @@
   border: 0.5px solid var(--gold-dim);
   padding: 3px 8px; border-radius: 3px;
 }
+
+.lg-input {
+  font-family: 'Noto Serif SC','Lora',serif;
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid var(--border, rgba(184,148,46,0.25));
+  border-radius: 4px;
+  background: #fff;
+  color: #1a1a15;
+  outline: none;
+}
+.lg-input:focus { border-color: var(--gold, #b8942e); }
+.lg-btn-primary {
+  background: var(--gold, #b8942e); color: #fafaf7; border: none;
+  padding: 10px 14px; border-radius: 4px; font-family: 'Noto Serif SC',serif;
+  font-size: 14px; cursor: pointer;
+}
+.lg-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.lg-btn-disabled {
+  background: #f0eee9; color: #a89870; border: 1px solid var(--border, rgba(184,148,46,0.25));
+  padding: 8px 12px; border-radius: 4px; font-family: 'Noto Serif SC',serif;
+  font-size: 13px; cursor: not-allowed;
+}
+.lg-err {
+  background: rgba(196,90,58,0.08); color: #c45a3a;
+  border-left: 2px solid #c45a3a; padding: 6px 10px; font-size: 12.5px;
+  font-family: 'Noto Serif SC',serif;
+}
