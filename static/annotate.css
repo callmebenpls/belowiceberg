@@ -158,3 +158,12 @@
   background: rgba(184,148,46,0.08); padding: 1px 5px; border-radius: 3px;
   font-size: 0.85em;
 }
+.bi-pop-scope {
+  padding: 8px 14px;
+  border-top: 1px solid #f0e9d8;
+  font-size: 12px;
+  color: var(--text2, #6b5e3e);
+  display: flex; gap: 14px; align-items: center;
+}
+.bi-pop-scope label { display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.bi-pop-scope input[type="radio"] { margin: 0; }
