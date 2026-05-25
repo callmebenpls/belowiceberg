@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>书库 · BelowIceberg · B社</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">
+    <div class="nav-seal"><span>B社</span></div>
+    <div class="nav-brand">
+      <span class="nav-brand-en">BelowIceberg</span>
+      <span class="nav-brand-zh">B社</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="/#method">方法论</a></li>
+    <li><a href="/books/" class="active">书目</a></li>
+    <li><a href="/#sample">试读</a></li>
+    <li><a href="/#about">关于B社</a></li>
+  </ul>
+  <a href="/login/?next=/books/" class="nav-login" id="nav-guest-login" hidden>登录</a>
+  <a href="/gatsby" class="nav-cta" id="nav-guest-cta" hidden>开始阅读</a>
+  <a href="/library/" class="nav-shelf" id="nav-user-shelf" hidden>我的书房</a>
+  <a href="/settings/" class="nav-user-chip" id="nav-user-chip" hidden>
+    <div class="av" id="nav-user-av">B</div>
+    <span class="uname" id="nav-user-name">读者</span>
+    <span class="caret">▾</span>
+  </a>
+</nav>
+
+<main class="catalog">
+  <header class="catalog-header">
+    <div class="catalog-tag">COLLECTION · 全部书库</div>
+    <h1 class="catalog-h1">经典文学精读</h1>
+    <p class="catalog-sub">精选英文文学经典，逐段六维深度分析</p>
+  </header>
+
+  <div class="catalog-search-wrap">
+    <svg class="catalog-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    <input id="catalog-search" class="catalog-search" type="text" placeholder="搜索书名、作者...">
+  </div>
+
+  <div class="catalog-filters">
+    <button class="catalog-filter active" data-status="all">全部</button>
+    <button class="catalog-filter" data-status="live">已上线</button>
+    <button class="catalog-filter" data-status="soon">即将推出</button>
+  </div>
+
+  <div id="catalog-grid" class="catalog-grid">
+    <a href="/gatsby" class="book-card" data-status="live" data-search="the great gatsby f scott fitzgerald 盖茨比 菲茨杰拉德">
+      <div class="book-cover bc-gatsby">
+        <span class="bc-title-en">The Great<br>Gatsby</span>
+        <span class="bc-title-zh">了不起的盖茨比</span>
+        <span class="bc-author">F. Scott Fitzgerald</span>
+        <span class="bc-label">BelowIceberg · B社</span>
+      </div>
+      <div class="book-meta-en">The Great Gatsby</div>
+      <div class="book-meta-zh">了不起的盖茨比</div>
+      <div class="book-meta-badges">
+        <span class="badge b-level">B2–C1</span>
+        <span class="badge b-avail">已上架</span>
+      </div>
+    </a>
+    <div class="book-card soon" data-status="soon" data-search="o henry short stories 欧亨利 麦琪的礼物 最后一片叶子">
+      <div class="book-cover bc-henry">
+        <span class="bc-title-en">O. Henry<br>Short Stories</span>
+        <span class="bc-title-zh">欧·亨利短篇精选</span>
+        <span class="bc-author">O. Henry</span>
+        <span class="bc-label">BelowIceberg · B社</span>
+      </div>
+      <div class="book-meta-en">O. Henry — Short Stories</div>
+      <div class="book-meta-zh">欧·亨利短篇精选</div>
+      <div class="book-meta-badges">
+        <span class="badge b-level">B1–B2</span>
+        <span class="badge b-soon">即将上架</span>
+      </div>
+    </div>
+    <div class="book-card soon" data-status="soon" data-search="the sun also rises ernest hemingway 太阳照常升起 海明威">
+      <div class="book-cover bc-sun">
+        <span class="bc-title-en">The Sun Also<br>Rises</span>
+        <span class="bc-title-zh">太阳照常升起</span>
+        <span class="bc-author">Ernest Hemingway</span>
+        <span class="bc-label">BelowIceberg · B社</span>
+      </div>
+      <div class="book-meta-en">The Sun Also Rises</div>
+      <div class="book-meta-zh">太阳照常升起</div>
+      <div class="book-meta-badges">
+        <span class="badge b-level">B2–C1</span>
+        <span class="badge b-soon">即将上架</span>
+      </div>
+    </div>
+    <div class="book-card soon" data-status="soon" data-search="the maltese falcon dashiell hammett 马耳他之鹰 哈米特">
+      <div class="book-cover bc-falcon">
+        <span class="bc-title-en">The Maltese<br>Falcon</span>
+        <span class="bc-title-zh">马耳他之鹰</span>
+        <span class="bc-author">Dashiell Hammett</span>
+        <span class="bc-label">BelowIceberg · B社</span>
+      </div>
+      <div class="book-meta-en">The Maltese Falcon</div>
+      <div class="book-meta-zh">马耳他之鹰</div>
+      <div class="book-meta-badges">
+        <span class="badge b-level">B2</span>
+        <span class="badge b-soon">即将上架</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="catalog-empty" class="catalog-empty">
+    <p>没有找到匹配的书籍</p>
+    <p style="font-size:0.85rem;margin-top:0.5rem">试试其他关键词？</p>
+  </div>
+</main>
+
+<script>
+// Login state — same pattern as homepage
+(async () => {
+  try {
+    const r = await fetch('/api/me', { credentials: 'same-origin' });
+    if (r.ok) {
+      const u = await r.json();
+      document.getElementById('nav-user-shelf').hidden = false;
+      const chip = document.getElementById('nav-user-chip');
+      chip.hidden = false;
+      const name = u.display_name || u.email || '读者';
+      document.getElementById('nav-user-name').textContent = name;
+      const initial = (name.charCodeAt(0) < 128 ? name[0] : 'B').toUpperCase();
+      document.getElementById('nav-user-av').textContent = initial;
+      return;
+    }
+  } catch (_) {}
+  document.getElementById('nav-guest-login').hidden = false;
+  document.getElementById('nav-guest-cta').hidden = false;
+})();
+
+// Filter + search
+const searchInput = document.getElementById('catalog-search');
+const filterButtons = document.querySelectorAll('.catalog-filter');
+const cards = document.querySelectorAll('.book-card');
+const empty = document.getElementById('catalog-empty');
+let activeStatus = 'all';
+
+function applyFilters() {
+  const q = searchInput.value.trim().toLowerCase();
+  let visible = 0;
+  cards.forEach(c => {
+    const status = c.dataset.status;
+    const haystack = c.dataset.search.toLowerCase();
+    const statusOk = activeStatus === 'all' || status === activeStatus;
+    const searchOk = !q || haystack.includes(q);
+    const show = statusOk && searchOk;
+    c.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+  empty.style.display = visible === 0 ? 'block' : 'none';
+}
+
+searchInput.addEventListener('input', applyFilters);
+filterButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    filterButtons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeStatus = btn.dataset.status;
+    applyFilters();
+  });
+});
+
+// Soft toast for 即将上架 cards (no destination)
+cards.forEach(c => {
+  if (c.dataset.status === 'soon') {
+    c.addEventListener('click', e => {
+      e.preventDefault();
+      const t = document.createElement('div');
+      t.textContent = '此书精读版正在制作中';
+      t.style.cssText = 'position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:#1a1a15;color:#b8942e;padding:0.6rem 1.2rem;border-radius:4px;font-family:Noto Serif SC,serif;font-size:0.85rem;z-index:300';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 2400);
+    });
+  }
+});
+</script>
+</body>
+</html>
