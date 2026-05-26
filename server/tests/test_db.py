@@ -11,7 +11,7 @@ def test_migrate_is_idempotent(db):
     migrate()  # second call should not error
     migrate()
     cur = db.execute("SELECT version FROM schema_version")
-    assert cur.fetchone()[0] == 1
+    assert cur.fetchone()[0] == 2
 
 def test_get_conn_returns_same_connection_within_process(db):
     from app.db import get_conn
