@@ -10,6 +10,9 @@ dependencies = [
   "bcrypt==4.2.*",
   "python-multipart==0.0.12",
   "email-validator>=2.0",
+  "ebooklib==0.18.*",
+  "beautifulsoup4==4.12.*",
+  "lxml>=4.9",
 ]
 
 [project.optional-dependencies]
