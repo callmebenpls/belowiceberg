@@ -59,3 +59,26 @@ async def stream_analysis(
                         yield delta
                 except (json.JSONDecodeError, KeyError, IndexError):
                     continue
+
+
+async def call_once(system: str, user: str, temperature: float = 0.3) -> str:
+    """Single non-streaming call. Returns full response text."""
+    body = {
+        "model": MODEL,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+        "stream": False,
+        "temperature": temperature,
+    }
+    headers = {
+        "Authorization": f"Bearer {load_config().deepseek_api_key}",
+        "Content-Type": "application/json",
+    }
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        r = await client.post(DEEPSEEK_URL, json=body, headers=headers)
+        if r.status_code >= 400:
+            raise DeepSeekError(f"DeepSeek {r.status_code}: {r.text[:200]!r}")
+        data = r.json()
+        return data["choices"][0]["message"]["content"]

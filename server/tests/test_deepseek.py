@@ -35,3 +35,26 @@ async def test_stream_analysis_http_error(env, httpx_mock):
     with pytest.raises(DeepSeekError):
         async for _ in stream_analysis("vocab", "x", "y"):
             pass
+
+
+async def test_call_once_returns_content(env, httpx_mock):
+    httpx_mock.add_response(
+        method="POST",
+        url="https://api.deepseek.com/chat/completions",
+        json={"choices": [{"message": {"content": '{"vocab":[]}'}}]},
+    )
+    from app.deepseek import call_once
+    result = await call_once("sys prompt", "user msg")
+    assert result == '{"vocab":[]}'
+
+
+async def test_call_once_raises_on_error(env, httpx_mock):
+    httpx_mock.add_response(
+        method="POST",
+        url="https://api.deepseek.com/chat/completions",
+        status_code=429,
+        text="rate limited",
+    )
+    from app.deepseek import call_once, DeepSeekError
+    with pytest.raises(DeepSeekError, match="429"):
+        await call_once("sys", "user")
