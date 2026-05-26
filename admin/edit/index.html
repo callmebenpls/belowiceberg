@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>标注编辑器 · B社</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/edit/styles.css">
+</head>
+<body>
+<div class="editor-layout">
+
+  <!-- ══ LEFT PANE ══ -->
+  <div class="left-pane" id="left-pane">
+    <div class="left-header">
+      <a href="/admin/" class="left-header-back">← 返回</a>
+      <div class="left-header-title">
+        <div class="title-en" id="book-title-en">载入中…</div>
+        <div class="title-zh" id="book-title-zh"></div>
+      </div>
+      <button class="btn-annotate" id="btn-annotate" onclick="startAnnotation()">开始标注</button>
+    </div>
+    <div id="paragraphs-container"></div>
+  </div>
+
+  <!-- ══ RIGHT PANE ══ -->
+  <div class="right-pane" id="right-pane">
+
+    <!-- Section 1: Scope -->
+    <div class="right-section">
+      <div class="right-section-hdr">SCOPE · 标注范围</div>
+      <div id="scope-list"></div>
+      <div class="scope-all" onclick="toggleAllScope()">整本书 · 全部章节 ↕</div>
+    </div>
+
+    <!-- Section 2: Dimensions -->
+    <div class="right-section">
+      <div class="right-section-hdr">DIMENSIONS · 标注维度</div>
+      <div class="dim-tags">
+        <span class="dim-tag on"  data-d="vocab"   onclick="toggleDim(this)">词汇</span>
+        <span class="dim-tag on"  data-d="grammar" onclick="toggleDim(this)">语法</span>
+        <span class="dim-tag"     data-d="syntax"  onclick="toggleDim(this)">句法</span>
+        <span class="dim-tag"     data-d="lit"     onclick="toggleDim(this)">文学手法</span>
+        <span class="dim-tag"     data-d="cult"    onclick="toggleDim(this)">文化背景</span>
+        <span class="dim-tag"     data-d="style"   onclick="toggleDim(this)">风格分析</span>
+      </div>
+      <div id="prompt-editors"></div>
+    </div>
+
+    <!-- Section 3: Depth & Language -->
+    <div class="right-section">
+      <div class="right-section-hdr">SETTINGS · 深度与语言</div>
+      <span class="settings-label">深度</span>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="depth" value="light"> 简读</label>
+        <label class="radio-opt"><input type="radio" name="depth" value="standard" checked> 标准</label>
+        <label class="radio-opt"><input type="radio" name="depth" value="deep"> 深度</label>
+      </div>
+      <span class="settings-label">语言</span>
+      <div class="radio-row">
+        <label class="radio-opt"><input type="radio" name="language" value="zh" checked> 中文</label>
+        <label class="radio-opt"><input type="radio" name="language" value="en"> English</label>
+        <label class="radio-opt"><input type="radio" name="language" value="bilingual"> 双语</label>
+      </div>
+    </div>
+
+    <!-- Section 4: Extra instructions -->
+    <div class="right-section">
+      <div class="right-section-hdr">EXTRA · 补充指令</div>
+      <textarea id="extra-instructions" class="extra-textarea"
+        placeholder="例如：重点关注比喻和讽刺手法…"
+        oninput="updatePromptPreview()"></textarea>
+    </div>
+
+    <!-- Section 5: Prompt preview -->
+    <div class="right-section">
+      <div class="right-section-hdr">PREVIEW · 提示词预览</div>
+      <pre class="prompt-preview" id="prompt-preview">选择维度后将在此显示预览</pre>
+    </div>
+
+  </div><!-- /right-pane -->
+</div>
+
+<script>
+const DEFAULT_PROMPTS = {
+  vocab:   'Identify vocabulary worth teaching: unusual words, literary diction, words used in unexpected ways. For each, write a 2-3 sentence explanation in the target language.',
+  grammar: 'Identify grammatical structures worth teaching: tenses, passive voice, complex clauses. Explain the structure and why it matters here.',
+  syntax:  'Identify syntactic patterns worth teaching: sentence length, inversion, parallelism, fragmentation. Explain the effect.',
+  lit:     'Identify literary devices: metaphor, simile, irony, foreshadowing, allusion. Explain the device and its effect.',
+  cult:    'Identify cultural references: historical events, geography, social customs, period details. Explain what a non-Western reader needs to know.',
+  style:   'Identify stylistic choices: register, tone, rhythm, word choice. Explain what they reveal about the narrator or characters.',
+};
+
+const params = new URLSearchParams(location.search);
+const BOOK_ID = parseInt(params.get('book') || '0');
+if (!BOOK_ID) { alert('缺少 book 参数'); location.href = '/admin/'; }
+
+let chapters  = [];
+let paragraphs = [];
+let annotations = {};   // paragraph_id → [{dimension, term, body_markdown}]
+let scopeChapterNums = new Set();
+
+// Auth check
+fetch('/api/me')
+  .then(r => r.ok ? r.json() : null)
+  .then(user => {
+    if (!user || !user.is_admin) {
+      location.href = '/login/?next=/admin/edit/?book=' + BOOK_ID;
+      return;
+    }
+    loadEditor();
+  })
+  .catch(() => { location.href = '/login/'; });
+
+async function loadEditor() {
+  const [booksRes, chRes, pRes, aRes] = await Promise.all([
+    fetch('/api/admin/books'),
+    fetch(`/api/admin/books/${BOOK_ID}/chapters`),
+    fetch(`/api/admin/books/${BOOK_ID}/paragraphs`),
+    fetch(`/api/admin/books/${BOOK_ID}/annotations`),
+  ]);
+
+  const books = await booksRes.json();
+  const bookData = books.find(b => b.id === BOOK_ID);
+  if (!bookData) { alert('Book not found'); location.href = '/admin/'; return; }
+
+  document.getElementById('book-title-en').textContent = bookData.title_en;
+  document.getElementById('book-title-zh').textContent = bookData.title_zh;
+  document.title = `${bookData.title_en} · 标注编辑器`;
+
+  chapters   = await chRes.json();
+  paragraphs = await pRes.json();
+
+  const annList = await aRes.json();
+  annotations = {};
+  for (const a of annList) {
+    (annotations[a.paragraph_id] = annotations[a.paragraph_id] || []).push(a);
+  }
+
+  scopeChapterNums = new Set(chapters.map(c => c.chapter_num));
+
+  renderScopeList();
+  renderParagraphs();
+  renderPromptEditors();
+  updatePromptPreview();
+
+  document.querySelectorAll('input[name=depth], input[name=language]').forEach(r => {
+    r.addEventListener('change', updatePromptPreview);
+  });
+}
+
+/* ── Scope ── */
+function renderScopeList() {
+  document.getElementById('scope-list').innerHTML = chapters.map(ch => `
+    <div class="scope-row" data-ch="${ch.chapter_num}">
+      <input type="checkbox" ${scopeChapterNums.has(ch.chapter_num) ? 'checked' : ''}
+             onchange="onScopeChange(${ch.chapter_num}, this.checked)">
+      <span class="scope-title">${esc(ch.title_zh)}</span>
+      <span class="scope-progress">${ch.annotated_paragraphs}/${ch.total_paragraphs}</span>
+    </div>
+  `).join('');
+}
+
+function onScopeChange(chNum, checked) {
+  if (checked) scopeChapterNums.add(chNum);
+  else         scopeChapterNums.delete(chNum);
+  updatePromptPreview();
+}
+
+function toggleAllScope() {
+  if (scopeChapterNums.size === chapters.length) {
+    scopeChapterNums.clear();
+  } else {
+    chapters.forEach(c => scopeChapterNums.add(c.chapter_num));
+  }
+  renderScopeList();
+  updatePromptPreview();
+}
+
+/* ── Dimensions ── */
+function toggleDim(tag) {
+  tag.classList.toggle('on');
+  renderPromptEditors();
+  updatePromptPreview();
+}
+
+function renderPromptEditors() {
+  const active = [...document.querySelectorAll('.dim-tag.on')].map(t => t.dataset.d);
+  document.getElementById('prompt-editors').innerHTML = active.map(d => `
+    <div class="prompt-editor" id="pe-${d}">
+      <button class="prompt-toggle" id="ptbtn-${d}" onclick="togglePromptExpand('${d}')">展开编辑 ▾</button>
+      <textarea class="prompt-textarea" id="pt-${d}" style="display:none"
+                oninput="updatePromptPreview()">${DEFAULT_PROMPTS[d] || ''}</textarea>
+    </div>
+  `).join('');
+}
+
+function togglePromptExpand(d) {
+  const ta  = document.getElementById(`pt-${d}`);
+  const btn = document.getElementById(`ptbtn-${d}`);
+  const open = ta.style.display === 'none';
+  ta.style.display  = open ? 'block' : 'none';
+  btn.textContent   = open ? '收起 ▴' : '展开编辑 ▾';
+}
+
+/* ── Config helpers ── */
+function getConfig() {
+  const dims = [...document.querySelectorAll('.dim-tag.on')].map(t => t.dataset.d);
+  const prompts = {};
+  dims.forEach(d => {
+    const ta = document.getElementById(`pt-${d}`);
+    prompts[d] = ta ? ta.value : DEFAULT_PROMPTS[d] || '';
+  });
+  const depth    = document.querySelector('input[name=depth]:checked')?.value    || 'standard';
+  const language = document.querySelector('input[name=language]:checked')?.value || 'zh';
+  const extra    = document.getElementById('extra-instructions').value.trim() || null;
+  return { dims, prompts, depth, language, extra };
+}
+
+function updatePromptPreview() {
+  const { dims, prompts, depth, language, extra } = getConfig();
+  const depthDesc = { light: 'brief (1-2 items max)', standard: 'thorough (2-4 items)', deep: 'exhaustive' }[depth];
+  const langDesc  = { zh: 'Chinese (中文)', en: 'English', bilingual: 'bilingual' }[language];
+  const dimSection = dims.map(d => `[${d.toUpperCase()}] ${prompts[d] || ''}`).join('\n');
+  const extraSection = extra ? `\nExtra: ${extra}` : '';
+  const preview = `[SYSTEM]\nYou are an expert literary annotator.\nDepth: ${depthDesc}.\nLanguage: ${langDesc}.\n\n${dimSection}${extraSection}\n\n[USER]\nReturn JSON: {"vocab":[...],"grammar":[...],...}`;
+  document.getElementById('prompt-preview').textContent = preview;
+}
+
+/* ── Left pane rendering ── */
+function renderParagraphs() {
+  const container = document.getElementById('paragraphs-container');
+  let html = '';
+  let lastChapter = null;
+  for (const p of paragraphs) {
+    if (p.chapter_num !== lastChapter) {
+      html += `<div class="chapter-divider">${esc(p.chapter_title)}</div>`;
+      lastChapter = p.chapter_num;
+    }
+    const anns = annotations[p.id] || [];
+    html += `
+      <div class="para-block" id="pb-${p.id}" onclick="selectPara(${p.id})">
+        <div class="para-meta">Ch.${p.chapter_num} · §${p.section_num}</div>
+        <div class="para-text">${esc(p.text_en)}</div>
+      </div>
+      <div class="ann-cards" id="ac-${p.id}">
+        ${anns.map(annCard).join('')}
+      </div>`;
+  }
+  container.innerHTML = html;
+}
+
+function annCard(a) {
+  return `<div class="ann-card" data-dim="${esc(a.dimension)}">
+    <div class="ann-card-term">${esc(a.term)}</div>
+    <div class="ann-card-body">${esc(a.body_markdown)}</div>
+  </div>`;
+}
+
+function selectPara(id) {
+  document.querySelectorAll('.para-block').forEach(b => b.classList.remove('active'));
+  const el = document.getElementById(`pb-${id}`);
+  if (el) { el.classList.add('active'); el.scrollIntoView({block: 'nearest'}); }
+}
+
+/* ── Annotation job ── */
+async function startAnnotation() {
+  const btn = document.getElementById('btn-annotate');
+  if (btn.disabled) return;
+
+  const { dims, prompts, depth, language, extra } = getConfig();
+  if (!dims.length) { alert('请至少选择一个标注维度'); return; }
+  if (!scopeChapterNums.size) { alert('请至少选择一个章节范围'); return; }
+
+  btn.disabled   = true;
+  btn.textContent = '正在标注…';
+
+  const body = {
+    book_id: BOOK_ID,
+    scope_chapter_nums: [...scopeChapterNums],
+    dimensions: dims,
+    prompts,
+    depth,
+    language,
+    extra_instructions: extra,
+  };
+
+  let jobId;
+  try {
+    const r = await fetch('/api/admin/jobs', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    });
+    if (!r.ok) throw new Error(await r.text());
+    jobId = (await r.json()).job_id;
+  } catch (err) {
+    alert('启动失败：' + String(err.message).slice(0, 100));
+    btn.disabled = false;
+    btn.textContent = '开始标注';
+    return;
+  }
+
+  const es = new EventSource(`/api/admin/jobs/${jobId}/stream`);
+
+  es.onmessage = e => {
+    let ev;
+    try { ev = JSON.parse(e.data); } catch { return; }
+
+    if (ev.type === 'annotation') {
+      const container = document.getElementById(`ac-${ev.paragraph_id}`);
+      if (container) {
+        const card = document.createElement('div');
+        card.className = 'ann-card';
+        card.dataset.dim = ev.dimension;
+        card.innerHTML = `<div class="ann-card-term">${esc(ev.term)}</div>
+          <div class="ann-card-body">${esc(ev.body_markdown)}</div>`;
+        container.appendChild(card);
+        // Scroll the para-block into view softly
+        const pb = document.getElementById(`pb-${ev.paragraph_id}`);
+        if (pb) pb.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      }
+    } else if (ev.type === 'done' || ev.type === 'error') {
+      es.close();
+      btn.disabled = false;
+      btn.textContent = '重新标注';
+      if (ev.type === 'error') alert('标注出错：' + (ev.message || '未知错误'));
+    }
+  };
+
+  es.onerror = () => {
+    es.close();
+    btn.disabled = false;
+    btn.textContent = '重新标注';
+  };
+}
+
+/* ── Utility ── */
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+</body>
+</html>
