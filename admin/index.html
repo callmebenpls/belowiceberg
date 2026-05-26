@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>管理后台 · B社</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Lora:wght@400;500&family=Noto+Serif+SC:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+<div class="admin-wrap">
+
+  <div class="admin-header">
+    <div style="display:flex;align-items:center;gap:0.5rem">
+      <h1>管理后台</h1>
+      <span class="admin-badge">ADMIN</span>
+    </div>
+    <button id="upload-toggle" class="btn-primary">+ 上传新书</button>
+  </div>
+
+  <div id="upload-zone" class="upload-zone hidden">
+    <div class="drop-target" id="drop-target">
+      <p style="margin-bottom:0.5rem">
+        拖放 EPUB 文件到这里，或
+        <label for="file-input" class="file-label">点击选择</label>
+      </p>
+      <input type="file" id="file-input" accept=".epub" hidden>
+      <div id="upload-progress" class="hidden" style="max-width:320px;margin:0.5rem auto 0">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <p id="upload-status" style="font-size:0.8rem;color:var(--text2)"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <span id="book-count" class="book-count">载入中…</span>
+    <div class="filter-pills">
+      <button class="pill active" data-filter="all">全部</button>
+      <button class="pill" data-filter="draft">草稿</button>
+      <button class="pill" data-filter="published">已发布</button>
+    </div>
+  </div>
+
+  <div id="book-list"></div>
+
+</div>
+
+<script>
+let allBooks = [];
+let currentFilter = 'all';
+
+// Auth check — redirect to login if not admin
+fetch('/api/me')
+  .then(r => r.ok ? r.json() : null)
+  .then(user => {
+    if (!user || !user.is_admin) {
+      location.href = '/login/?next=/admin/';
+      return;
+    }
+    loadBooks();
+  })
+  .catch(() => { location.href = '/login/?next=/admin/'; });
+
+async function loadBooks() {
+  const r = await fetch('/api/admin/books');
+  if (!r.ok) return;
+  allBooks = await r.json();
+  renderBooks();
+}
+
+function renderBooks() {
+  const filtered = currentFilter === 'all'
+    ? allBooks
+    : allBooks.filter(b => b.status === currentFilter);
+  document.getElementById('book-count').textContent = `${filtered.length} 本书`;
+  const el = document.getElementById('book-list');
+  if (!filtered.length) {
+    el.innerHTML = '<p class="empty">暂无书籍</p>';
+    return;
+  }
+  el.innerHTML = filtered.map(bookRow).join('');
+}
+
+function bookRow(b) {
+  const coverStyle = b.cover_css || 'background:var(--bg3)';
+  return `
+    <div class="book-row">
+      <div class="book-cover-mini" style="${coverStyle}"></div>
+      <div>
+        <div class="book-title-en">${esc(b.title_en)}</div>
+        <div class="book-title-zh">${esc(b.title_zh)}</div>
+        <div class="book-meta">${esc(b.author)} · ${b.chapter_count} 章</div>
+      </div>
+      <div class="book-progress">${b.annotated_paragraphs} / ${b.total_paragraphs} 段已标注</div>
+      <button class="status-badge status-${b.status}" onclick="toggleStatus(${b.id},'${b.status}')">
+        ${b.status === 'published' ? 'PUBLISHED' : 'DRAFT'}
+      </button>
+      <div class="book-actions">
+        <a href="/gatsby" target="_blank" class="btn-sm">预览</a>
+        <a href="/admin/edit/?book=${b.id}" class="btn-sm btn-primary">标注</a>
+      </div>
+    </div>`;
+}
+
+async function toggleStatus(id, current) {
+  const next = current === 'published' ? 'draft' : 'published';
+  const r = await fetch(`/api/admin/books/${id}`, {
+    method: 'PATCH',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({status: next}),
+  });
+  if (r.ok) loadBooks();
+}
+
+// Filter pills
+document.querySelectorAll('.pill').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderBooks();
+  });
+});
+
+// Upload zone toggle
+document.getElementById('upload-toggle').addEventListener('click', () => {
+  document.getElementById('upload-zone').classList.toggle('hidden');
+});
+
+// Drag & drop
+const drop = document.getElementById('drop-target');
+drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('drag-over'); });
+drop.addEventListener('dragleave', () => drop.classList.remove('drag-over'));
+drop.addEventListener('drop', e => {
+  e.preventDefault();
+  drop.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file) uploadEpub(file);
+});
+document.getElementById('file-input').addEventListener('change', e => {
+  if (e.target.files[0]) uploadEpub(e.target.files[0]);
+});
+
+async function uploadEpub(file) {
+  const prog = document.getElementById('upload-progress');
+  const statusEl = document.getElementById('upload-status');
+  const fill = document.getElementById('progress-fill');
+  prog.classList.remove('hidden');
+  statusEl.textContent = '正在上传和解析…';
+  fill.style.width = '30%';
+  const fd = new FormData();
+  fd.append('file', file);
+  try {
+    const r = await fetch('/api/admin/books/upload', {method: 'POST', body: fd});
+    if (!r.ok) throw new Error(await r.text());
+    fill.style.width = '100%';
+    const data = await r.json();
+    statusEl.textContent = '上传成功！正在跳转…';
+    await loadBooks();
+    setTimeout(() => location.href = `/admin/edit/?book=${data.book_id}`, 800);
+  } catch (err) {
+    statusEl.textContent = `上传失败：${String(err.message).slice(0, 120)}`;
+    fill.style.width = '0%';
+  }
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+</script>
+</body>
+</html>
